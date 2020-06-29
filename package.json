@@ -1,0 +1,68 @@
+{
+  "name": "guesswho",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^26.0.3",
+    "@types/node": "^14.0.14",
+    "@types/react": "^16.9.41",
+    "@types/react-dom": "^16.9.8",
+    "aws-sdk": "^2.706.0",
+    "axios": "^0.19.2",
+    "customize-cra": "^1.0.0",
+    "emotion": "^10.0.27",
+    "react": "^16.13.1",
+    "react-app-rewired": "^2.1.6",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "sharp": "^0.25.4",
+    "typescript": "^3.9.5",
+    "typescript-styled-plugin": "^0.15.0"
+  },
+  "devDependencies": {
+    "@emotion/babel-preset-css-prop": "^10.0.27",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "prettier": "^2.0.5",
+    "prettier-eslint": "^9.0.1",
+    "stylelint": "^13.2.1",
+    "stylelint-config-prettier": "^8.0.1",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-prettier": "^1.1.2"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
