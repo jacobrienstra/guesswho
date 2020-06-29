@@ -21,8 +21,14 @@ module.exports = {
     react: {
       version: "detect",
     },
+    "import/extensions": [".tsx", ".ts"],
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
+    "import/resolver": {
+      "eslint-import-resolver-custom-alias": {
+        extensions: [".tsx", ".ts"],
+      },
     },
   },
   env: {
@@ -54,7 +60,7 @@ module.exports = {
     "react/jsx-filename-extension": [
       1,
       {
-        extensions: [".tsx"],
+        extensions: [".tsx", ".ts"],
       },
     ],
     "no-underscore-dangle": "off",
