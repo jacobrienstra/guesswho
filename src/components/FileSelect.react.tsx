@@ -21,7 +21,6 @@ function FileSelect(): JSX.Element {
   const props = { webkitdirectory: "", directory: "" };
   const handleInput = (event: ChangeEvent<HTMLInputElement>): void => {
     event.preventDefault();
-    console.log(event.target.files);
   };
   return (
     <>
