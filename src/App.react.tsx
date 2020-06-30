@@ -1,15 +1,16 @@
 import React from "react";
 import { css } from "@emotion/core";
 
+import FileSelect from "./components/FileSelect.react";
 import CardGrid from "./components/CardGrid.react";
 
 const root = css`
-  justify-content: center;
   display: block;
+  justify-content: center;
   box-sizing: border-box;
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
+  margin-right: auto;
+  margin-left: auto;
   padding: 16px;
 `;
 
@@ -28,6 +29,7 @@ function App(): JSX.Element {
   }, []);
   return (
     <div css={root}>
+      <FileSelect />
       <CardGrid fileSrcs={images} />
     </div>
   );
