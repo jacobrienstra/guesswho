@@ -1,6 +1,7 @@
 import React from "react";
 import { css } from "@emotion/core";
 
+import Modal from "./components/Modal.react";
 import DeckSelect from "./components/DeckSelect.react";
 import CardGrid from "./components/CardGrid.react";
 

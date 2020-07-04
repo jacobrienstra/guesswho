@@ -4,6 +4,9 @@ import React, { ChangeEvent } from "react";
 import { Octokit } from "@octokit/rest";
 import { css } from "@emotion/core";
 
+import { dispatch } from "../redux/store";
+import { SET_MODAL_SHOWN, SET_MODAL_CONTENT } from "../redux/actions";
+
 import Modal from "./Modal.react";
 import Button from "./Button.react";
 
@@ -18,25 +21,35 @@ const api = new Octokit({
 });
 
 function DeckSelect(): JSX.Element {
-  const [isModalShown, setModalShown] = React.useState(false);
   const props = { webkitdirectory: "", directory: "" };
 
   const handleInput = async (
     event: ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
     event.preventDefault();
-    const res = await api.repos.getContent({
-      owner: "jacobrienstra",
-      repo: "guesswho",
-      path: "src/pics",
-    });
-    console.log(res);
   };
   return (
     <>
       <Button
         onClick={(): void => {
-          setModalShown(true);
+          dispatch({
+            type: SET_MODAL_CONTENT,
+            title: "Choose Existing Deck",
+            content: <div>Loading...</div>,
+          });
+          dispatch({ type: SET_MODAL_SHOWN, isShown: true });
+          const res = api.repos.getContent({
+            owner: "jacobrienstra",
+            repo: "guesswho",
+            path: "src/pics",
+          });
+          res.then((results) => {
+            dispatch({
+              type: SET_MODAL_CONTENT,
+              content: <div />,
+            });
+            console.log(res);
+          });
         }}
       >
         Choose Existing Deck
@@ -52,11 +65,7 @@ function DeckSelect(): JSX.Element {
           {...props}
         />
       </Button>
-      <Modal
-        title="Choose Deck"
-        onClose={(): void => setModalShown(false)}
-        isShown={isModalShown}
-      />
+      <Modal />
     </>
   );
 }

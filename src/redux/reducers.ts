@@ -5,7 +5,6 @@ import {
   SET_MODAL_CONTENT,
   SET_MODAL_SHOWN,
   SetModalShownAction,
-  GUESS_WHO_ACTION,
 } from "./actions";
 
 interface Card {
@@ -14,24 +13,23 @@ interface Card {
   id: number;
 }
 
-// interface State {
-// cards: Set<Card>;
-// deck: string;
-//   modal: ModalState;
-// }
+export interface State {
+  // cards: Set<Card>;
+  // deck: string;
+  modal: ModalState;
+}
 
-interface ModalState {
+export interface ModalState {
   isShown: boolean;
   title: string;
   content: JSX.Element | null;
-  onClose: () => void;
+  onClose?: () => void; // Set this in component;
 }
 
 const initialModalState: ModalState = {
   isShown: false,
   title: "",
   content: null,
-  onClose: () => {},
 };
 
 export function modal(

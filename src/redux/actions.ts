@@ -4,9 +4,9 @@ export const SET_MODAL_CONTENT = "SET_MODAL";
 export const SET_MODAL_SHOWN = "SET_MODAL_SHOWN";
 
 export interface ModalContent {
-  title: string;
-  onClose: () => void;
-  content: JSX.Element;
+  title?: string;
+  content?: JSX.Element;
+  onClose?: () => void;
 }
 
 export type SetModalContentAction = Action<typeof SET_MODAL_CONTENT> &
