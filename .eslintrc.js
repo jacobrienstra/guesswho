@@ -5,6 +5,7 @@ module.exports = {
     "airbnb",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "plugin:import/typescript",
     "prettier",
     "prettier/@typescript-eslint",
     "prettier/react",
@@ -28,6 +29,9 @@ module.exports = {
     "import/resolver": {
       "eslint-import-resolver-custom-alias": {
         extensions: [".tsx", ".ts"],
+      },
+      typescript: {
+        directory: "./",
       },
     },
   },
@@ -93,7 +97,7 @@ module.exports = {
         alphabetize: { order: "desc", caseInsensitive: true },
       },
     ],
-    "import/no-unresolved": ["error", { commonjs: true }],
+    "import/no-unresolved": ["error", { commonjs: true, amd: true }],
     "import/extensions": ["error", "never", { css: "always" }],
     "import/no-named-as-default": "off",
     "@typescript-eslint/ban-ts-ignore": "warn",

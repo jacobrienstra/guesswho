@@ -1,6 +1,7 @@
 import process from "process";
 
 import React, { ChangeEvent } from "react";
+import { ReposGetContentResponseData } from "@octokit/types/dist-types/generated/Endpoints";
 import { Octokit } from "@octokit/rest";
 import { css } from "@emotion/core";
 
@@ -46,24 +47,31 @@ function DeckSelect(): JSX.Element {
           res.then((results) => {
             dispatch({
               type: SET_MODAL_CONTENT,
-              content: <div />,
+              content: (
+                <div>
+                  {(results.data as any).map(
+                    (folder: ReposGetContentResponseData) => (
+                      <div key={folder.sha}>{folder.name}</div>
+                    )
+                  )}
+                </div>
+              ),
             });
-            console.log(res);
           });
         }}
       >
         Choose Existing Deck
       </Button>
       <Button tag="label" htmlFor="directory">
-        Choose Image Directory
-        <input
+        Upload New Deck
+        {/* <input
           css={input}
           name="directory"
           id="directory"
           type="file"
           onChange={handleInput}
           {...props}
-        />
+        /> */}
       </Button>
       <Modal />
     </>

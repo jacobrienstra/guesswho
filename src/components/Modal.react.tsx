@@ -36,7 +36,6 @@ const root = css`
     left: 0;
     z-index: 202;
     display: flex;
-    align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
@@ -46,13 +45,15 @@ const root = css`
     .modal {
       position: fixed;
       z-index: 202;
-      z-index: inherit;
+      display: flex;
+      flex-direction: column;
+      box-sizing: content-box;
       width: calc(100% - 16px);
       max-width: 600px;
       height: calc(100% - 16px);
       max-height: 90%;
       margin: 24px;
-      overflow-y: auto;
+      overflow-y: hidden;
       background: white;
       border-radius: 4px;
       box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2),
@@ -65,33 +66,34 @@ const root = css`
         display: flex;
         flex-shrink: 0;
         align-items: center;
-        height: 60px;
-        padding: 0 16px;
+        padding: 8px 24px;
         border-bottom: 2px solid black;
 
         .title {
           margin-right: 12px;
           font-size: 16px;
         }
+      }
 
-        .body {
-          width: 100%;
-          height: 100%;
-          padding: 24px;
-        }
+      .body {
+        position: relative;
+        display: flex;
+        flex: 1 0 auto;
+        box-sizing: content-box;
+        margin: 24px;
+        overflow-y: auto;
+      }
 
-        .footer {
-          display: flex;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: flex-end;
-          height: 60px;
-          padding: 0 16px;
-          border-top: 2px solid black;
+      .footer {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 8px 24px;
+        border-top: 2px solid black;
 
-          & > *:not(:last-child) {
-            margin-right: 8px;
-          }
+        & > *:not(:last-child) {
+          margin-right: 8px;
         }
       }
     }

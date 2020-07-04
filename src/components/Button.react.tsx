@@ -2,9 +2,11 @@ import React, { PropsWithChildren } from "react";
 import { css } from "@emotion/core";
 
 const button = css`
-  display: flex;
+  display: block;
+  align-items: flex-start;
   justify-content: center;
   box-sizing: content-box;
+  width: 100%;
   min-width: 160px;
   max-width: 240px;
   margin: 8px;
@@ -12,9 +14,10 @@ const button = css`
   color: white;
   font-weight: 700;
   font-size: 1rem;
+  text-align: center;
   background-color: #00a0ff;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
 `;
 
