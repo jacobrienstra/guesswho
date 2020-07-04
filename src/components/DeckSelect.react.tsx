@@ -4,17 +4,8 @@ import React, { ChangeEvent } from "react";
 import { Octokit } from "@octokit/rest";
 import { css } from "@emotion/core";
 
-const button = css`
-  display: flex;
-  justify-content: center;
-  max-width: 240px;
-  padding: 16px 24px;
-  color: white;
-  font-weight: 700;
-  background-color: #00a0ff;
-  border-radius: 6px;
-  cursor: pointer;
-`;
+import Modal from "./Modal.react";
+import Button from "./Button.react";
 
 const input = css`
   display: none;
@@ -26,8 +17,10 @@ const api = new Octokit({
   baseUrl: "https://api.github.com",
 });
 
-function FileSelect(): JSX.Element {
+function DeckSelect(): JSX.Element {
+  const [isModalShown, setModalShown] = React.useState(false);
   const props = { webkitdirectory: "", directory: "" };
+
   const handleInput = async (
     event: ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -41,7 +34,14 @@ function FileSelect(): JSX.Element {
   };
   return (
     <>
-      <label css={button} htmlFor="directory">
+      <Button
+        onClick={(): void => {
+          setModalShown(true);
+        }}
+      >
+        Choose Existing Deck
+      </Button>
+      <Button tag="label" htmlFor="directory">
         Choose Image Directory
         <input
           css={input}
@@ -51,9 +51,14 @@ function FileSelect(): JSX.Element {
           onChange={handleInput}
           {...props}
         />
-      </label>
+      </Button>
+      <Modal
+        title="Choose Deck"
+        onClose={(): void => setModalShown(false)}
+        isShown={isModalShown}
+      />
     </>
   );
 }
 
-export default FileSelect;
+export default DeckSelect;

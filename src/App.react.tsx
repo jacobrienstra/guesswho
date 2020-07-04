@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/core";
 
-import FileSelect from "./components/FileSelect.react";
+import DeckSelect from "./components/DeckSelect.react";
 import CardGrid from "./components/CardGrid.react";
 
 const root = css`
@@ -29,8 +29,9 @@ function App(): JSX.Element {
   }, []);
   return (
     <div css={root}>
-      <FileSelect />
+      <DeckSelect />
       <CardGrid fileSrcs={images} />
+      <Modal />
     </div>
   );
 }

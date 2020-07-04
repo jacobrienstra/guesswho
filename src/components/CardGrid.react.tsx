@@ -6,10 +6,10 @@ import CharacterCard from "./CharacterCard.react";
 const grid = css`
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-content: flex-start;
-  width: 100%;
   flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: center;
+  width: 100%;
 `;
 
 type Props = {
