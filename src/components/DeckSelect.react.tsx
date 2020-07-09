@@ -1,9 +1,10 @@
 import process from "process";
 
 import React, { ChangeEvent } from "react";
+import axios from "axios";
 import { ReposGetContentResponseData } from "@octokit/types/dist-types/generated/Endpoints";
 import { Octokit } from "@octokit/rest";
-import { css } from "@emotion/core";
+// import { css } from "@emotion/core";
 
 import { dispatch } from "../redux/store";
 import {
@@ -15,9 +16,9 @@ import {
 
 import Button from "./Button.react";
 
-const input = css`
-  display: none;
-`;
+// const input = css`
+//   display: none;
+// `;
 
 const api = new Octokit({
   auth: process.env.ACCESS_TOKEN,
@@ -26,23 +27,40 @@ const api = new Octokit({
 });
 
 function DeckSelect(): JSX.Element {
-  const props = { webkitdirectory: "", directory: "" };
+  // const props = { webkitdirectory: "", directory: "" };
 
-  const handleInput = async (
-    event: ChangeEvent<HTMLInputElement>
-  ): Promise<void> => {
-    event.preventDefault();
-  };
+  // const handleInput = async (
+  //   event: ChangeEvent<HTMLInputElement>
+  // ): Promise<void> => {
+  //   event.preventDefault();
+  // };
 
-  const setDeck = (name: string) => {
+  const setDeck = (name: string): void => {
     dispatch({ type: SET_DECK_NAME, name });
-    const context = require.context(`./pics/${name}`, true);
-    const keys = require
-      .context(`./pics/${name}`, true, /\.(png|jp(e)?g|svg)$/)
-      .keys();
-    Promise.all(keys.map(async (img) => context(img))).then((imgs) =>
-      dispatch({ type: SET_DECK_CARDS, srcUris: imgs })
-    );
+    const res = api.repos.getContent({
+      owner: "jacobrienstra",
+      repo: "guesswho",
+      path: `src/pics/${name}`,
+    });
+    let keys: string[] | null = null;
+    let context: __WebpackModuleApi.RequireContext;
+    if (name === "avatar") {
+      context = require.context(`../pics/avatar`, true);
+      keys = require
+        .context(`../pics/avatar`, true, /\.(png|jp(e)?g|svg)$/)
+        .keys();
+    }
+    if (name === "memes") {
+      context = require.context(`../pics/memes`, true);
+      keys = require
+        .context(`../pics/memes`, true, /\.(png|jp(e)?g|svg)$/)
+        .keys();
+    }
+    if (keys != null) {
+      Promise.all(keys.map(async (img) => context(img))).then((imgs) =>
+        dispatch({ type: SET_DECK_CARDS, srcUris: imgs })
+      );
+    }
   };
 
   const getDeck = (): void => {
