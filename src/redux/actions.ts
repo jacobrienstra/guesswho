@@ -30,4 +30,17 @@ export type SetDeckCardsAction = Action<typeof SET_DECK_CARDS> & {
 
 export type DECK_ACTION = SetDeckCardsAction | SetDeckNameAction;
 
-export type GUESS_WHO_ACTION = MODAL_ACTION & DECK_ACTION;
+export const SET_NUM_CARDS = "SET_NUM_CARDS";
+export const SET_SHOW_NAMES = "SET_SHOW_NAMES";
+
+export type SetNumCardsAction = Action<typeof SET_NUM_CARDS> & {
+  numCards: number;
+};
+
+export type SetShowNamesAction = Action<typeof SET_SHOW_NAMES> & {
+  showNames: boolean;
+};
+
+export type SETTINGS_ACTION = SetNumCardsAction | SetShowNamesAction;
+
+export type GUESS_WHO_ACTION = MODAL_ACTION & DECK_ACTION & SETTINGS_ACTION;

@@ -7,6 +7,11 @@ import {
   SET_DECK_NAME,
   SET_DECK_CARDS,
   DECK_ACTION,
+  SETTINGS_ACTION,
+  SET_NUM_CARDS,
+  SET_SHOW_NAMES,
+  SetNumCardsAction,
+  SetShowNamesAction,
   SetModalShownAction,
   SetDeckNameAction,
   SetDeckCardsAction,
@@ -37,6 +42,12 @@ interface Card {
 export interface State {
   deck: DeckState;
   modal: ModalState;
+  settings: SettingsState;
+}
+
+export interface SettingsState {
+  numCards: number;
+  showNames: boolean;
 }
 
 export interface DeckState {
@@ -61,6 +72,25 @@ const initialDeckState: DeckState = {
   name: null,
   cards: null,
 };
+
+const initialSettingsState: SettingsState = {
+  numCards: 24,
+  showNames: false,
+};
+
+export function settings(
+  state: SettingsState = initialSettingsState,
+  action: SETTINGS_ACTION
+): SettingsState {
+  switch (action.type) {
+    case SET_NUM_CARDS:
+      return { ...state, numCards: (action as SetNumCardsAction).numCards };
+    case SET_SHOW_NAMES:
+      return { ...state, showNames: (action as SetShowNamesAction).showNames };
+    default:
+      return state;
+  }
+}
 
 export function deck(
   state: DeckState = initialDeckState,
@@ -96,6 +126,6 @@ export function modal(
   }
 }
 
-const guessWhoApp = combineReducers({ modal, deck });
+const guessWhoApp = combineReducers({ modal, deck, settings });
 
 export default guessWhoApp;

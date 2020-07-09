@@ -57,9 +57,10 @@ function DeckSelect(): JSX.Element {
         .keys();
     }
     if (keys != null) {
-      Promise.all(keys.map(async (img) => context(img))).then((imgs) =>
-        dispatch({ type: SET_DECK_CARDS, srcUris: imgs })
-      );
+      Promise.all(keys.map(async (img) => context(img))).then((imgs) => {
+        dispatch({ type: SET_DECK_CARDS, srcUris: imgs });
+        dispatch({ type: SET_MODAL_SHOWN, isShown: false });
+      });
     }
   };
 

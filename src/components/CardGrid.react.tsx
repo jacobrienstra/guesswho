@@ -2,7 +2,7 @@ import { connect, MapStateToProps } from "react-redux";
 import React from "react";
 import { css } from "@emotion/core";
 
-import { DeckState, State } from "../redux/reducers";
+import { DeckState, State, SettingsState } from "../redux/reducers";
 
 import CharacterCard from "./CharacterCard.react";
 
@@ -15,20 +15,25 @@ const grid = css`
   width: 100%;
 `;
 
-type Props = DeckState;
+type Props = DeckState & SettingsState;
 
 function CardGrid(props: Props): JSX.Element {
   const { cards } = props;
+  // Shuffle array
+  const shuffled = cards ? cards.sort(() => 0.5 - Math.random()) : [];
+  // Get sub-array of first n elements after shuffled
+  const selected = shuffled.slice(0, props.numCards);
   return (
     <div css={grid}>
       {cards
-        ? cards.map(
+        ? selected.map(
             (card): JSX.Element => (
               <CharacterCard
                 fileSrc={card.srcUri}
                 key={card.id}
                 id={card.id}
                 name={card.name}
+                showName={props.showNames}
               />
             )
           )
@@ -37,9 +42,12 @@ function CardGrid(props: Props): JSX.Element {
   );
 }
 
-const mapStateToProps: MapStateToProps<DeckState, {}, State> = (state) => {
+const mapStateToProps: MapStateToProps<DeckState & SettingsState, {}, State> = (
+  state
+) => {
   return {
     ...state.deck,
+    ...state.settings,
   };
 };
 

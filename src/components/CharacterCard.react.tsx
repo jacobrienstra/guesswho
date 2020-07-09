@@ -17,7 +17,7 @@ const card = css`
     padding-top: 4px;
     color: black;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 12px;
     text-align: center;
     word-wrap: normal;
   }
@@ -37,8 +37,8 @@ const card = css`
   &,
   .front,
   .back {
-    width: 116px;
-    height: 180px;
+    width: 216px;
+    height: 260px;
   }
 
   /* hide back of pane during swap */
@@ -81,6 +81,7 @@ type Props = {
   fileSrc: string;
   name: string;
   id: number;
+  showName: boolean;
 };
 
 function CharacterCard(props: Props): JSX.Element {
@@ -96,12 +97,12 @@ function CharacterCard(props: Props): JSX.Element {
       <div className="flipper">
         <div className="front">
           <div className="container">
-            <img src={fileSrc} alt={name} width={100} />
-            <div className="name">{name}</div>
+            <img src={fileSrc} alt={name} width={200} />
+            {props.showName ? <div className="name">{name}</div> : null}
           </div>
         </div>
         <div className="back">
-          <div className="name">{name}</div>
+          {props.showName ? <div className="name">{name}</div> : null}
         </div>
       </div>
     </div>
