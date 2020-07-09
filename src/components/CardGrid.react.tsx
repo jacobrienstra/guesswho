@@ -22,13 +22,21 @@ function CardGrid(props: Props): JSX.Element {
 
   // Shuffle array
   let selected: Card[] | null = null;
-  if (cards && props.hash) {
-    const hashCard = cards.find((card) => card.hash === props.hash);
-    const nonHashed = cards.filter((card) => card.hash !== props.hash);
-    const shuffled = nonHashed.sort(() => 0.5 - Math.random());
+  let shuffled: Card[] | null = null;
+  let hashCard: Card | undefined;
+  if (cards) {
+    if (props.hash) {
+      hashCard = cards.find((card) => card.hash === props.hash);
+      const nonHashed = cards.filter((card) => card.hash !== props.hash);
+      shuffled = nonHashed.sort(() => 0.5 - Math.random());
+    } else {
+      shuffled = cards.sort(() => 0.5 - Math.random());
+    }
+
     // Get sub-array of first n elements after shuffled
+    selected = [...shuffled.slice(0, props.numCards)];
     if (hashCard) {
-      selected = [...shuffled.slice(0, props.numCards), hashCard];
+      selected.push(hashCard);
     }
   }
   return (

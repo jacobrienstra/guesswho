@@ -16,6 +16,7 @@ import {
   SET_DECK_NAME,
   SET_DECK_CARDS,
   SET_SHOW_NAMES,
+  SET_MYSTERY_CARD_HASH,
   SET_NUM_CARDS,
 } from "../redux/actions";
 
@@ -66,7 +67,6 @@ function DeckSelect(props: State): JSX.Element {
     if (keys != null) {
       Promise.all(keys.map(async (img) => context(img))).then((imgs) => {
         dispatch({ type: SET_DECK_CARDS, srcUris: imgs });
-        dispatch({ type: SET_MODAL_SHOWN, isShown: false });
       });
     }
   };
@@ -157,12 +157,15 @@ function DeckSelect(props: State): JSX.Element {
       </label>
       <Button onClick={getCard}>Generate card and hash</Button>
       {guessCard ? (
-        <CharacterCard
-          name={guessCard.name}
-          id={guessCard.id}
-          fileSrc={guessCard.srcUri}
-          showName={props.settings.showNames}
-        />
+        <>
+          <CharacterCard
+            name={guessCard.name}
+            id={guessCard.id}
+            fileSrc={guessCard.srcUri}
+            showName={props.settings.showNames}
+          />
+          <div>{guessCard.hash}</div>
+        </>
       ) : null}
 
       {/* <Button tag="label" html=For="directory">
