@@ -16,22 +16,10 @@ const root = css`
 `;
 
 function App(): JSX.Element {
-  const [images, setImages] = React.useState([] as string[]);
-  React.useEffect(() => {
-    const fetch = async (): Promise<void> => {
-      const context = require.context("./pics", true);
-      const keys = require
-        .context("./pics", true, /\.(png|jp(e)?g|svg)$/)
-        .keys();
-      const imgs = await Promise.all(keys.map(async (img) => context(img)));
-      setImages(imgs);
-    };
-    fetch();
-  }, []);
   return (
     <div css={root}>
       <DeckSelect />
-      <CardGrid fileSrcs={images} />
+      <CardGrid />
       <Modal />
     </div>
   );

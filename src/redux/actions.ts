@@ -17,4 +17,17 @@ export type SetModalShownAction = Action<typeof SET_MODAL_SHOWN> & {
 
 export type MODAL_ACTION = SetModalContentAction | SetModalShownAction;
 
-export type GUESS_WHO_ACTION = MODAL_ACTION;
+export const SET_DECK_NAME = "SET_DECK_NAME";
+export const SET_DECK_CARDS = "SET_DECK_CARDS";
+
+export type SetDeckNameAction = Action<typeof SET_DECK_NAME> & {
+  name: string;
+};
+
+export type SetDeckCardsAction = Action<typeof SET_DECK_CARDS> & {
+  srcUris: string[];
+};
+
+export type DECK_ACTION = SetDeckCardsAction | SetDeckNameAction;
+
+export type GUESS_WHO_ACTION = MODAL_ACTION & DECK_ACTION;

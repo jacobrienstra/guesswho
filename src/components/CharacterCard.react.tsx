@@ -2,26 +2,6 @@ import React from "react";
 import { cx } from "emotion";
 import { css } from "@emotion/core";
 
-type Props = {
-  fileSrc: string;
-};
-
-function capitalize(s: string): string {
-  return s
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
-function getFileName(f: string): string {
-  const parts = f.split("/");
-  if (parts) {
-    const last = parts.pop();
-    if (last) return last.split(".")[0];
-  }
-  return f.split(".")[0];
-}
-
 const card = css`
   position: relative;
   display: block;
@@ -46,7 +26,7 @@ const card = css`
   .flipper {
     position: relative;
     transform-style: preserve-3d;
-    transition: 0.3s;
+    transition: 0.2s;
   }
 
   /* flip the pane when hovered */
@@ -97,13 +77,19 @@ const card = css`
   }
 `;
 
+type Props = {
+  fileSrc: string;
+  name: string;
+  id: number;
+};
+
 function CharacterCard(props: Props): JSX.Element {
-  const { fileSrc } = props;
+  const { fileSrc, name, id } = props;
   const [isVisible, setVisible] = React.useState(true);
-  const name = capitalize(getFileName(fileSrc));
   return (
     <div
       css={card}
+      key={id}
       className={cx({ eliminated: !isVisible }, ["card", "flip-container"])}
       onClick={(): void => setVisible(!isVisible)}
     >

@@ -1,5 +1,8 @@
+import { connect, MapStateToProps } from "react-redux";
 import React from "react";
 import { css } from "@emotion/core";
+
+import { DeckState, State } from "../redux/reducers";
 
 import CharacterCard from "./CharacterCard.react";
 
@@ -12,20 +15,32 @@ const grid = css`
   width: 100%;
 `;
 
-type Props = {
-  fileSrcs: string[];
-};
+type Props = DeckState;
 
 function CardGrid(props: Props): JSX.Element {
+  const { cards } = props;
   return (
     <div css={grid}>
-      {props.fileSrcs.map(
-        (src: string): JSX.Element => (
-          <CharacterCard fileSrc={src} key={src} />
-        )
-      )}
+      {cards
+        ? cards.map(
+            (card): JSX.Element => (
+              <CharacterCard
+                fileSrc={card.srcUri}
+                key={card.id}
+                id={card.id}
+                name={card.name}
+              />
+            )
+          )
+        : null}
     </div>
   );
 }
 
-export default CardGrid;
+const mapStateToProps: MapStateToProps<DeckState, {}, State> = (state) => {
+  return {
+    ...state.deck,
+  };
+};
+
+export default connect(mapStateToProps)(CardGrid);
