@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import CryptoJS from "crypto-js";
 
 import {
   MODAL_ACTION,
@@ -15,6 +16,8 @@ import {
   SetModalShownAction,
   SetDeckNameAction,
   SetDeckCardsAction,
+  SET_MYSTERY_CARD_HASH,
+  SetMysteryCardHashAction,
 } from "./actions";
 
 function capitalize(s: string): string {
@@ -33,10 +36,11 @@ function getFileName(f: string): string {
   return f.split(".")[0];
 }
 
-interface Card {
+export interface Card {
   name: string;
   srcUri: string;
   id: number;
+  hash: string;
 }
 
 export interface State {
@@ -53,6 +57,7 @@ export interface SettingsState {
 export interface DeckState {
   name: string | null;
   cards: Card[] | null;
+  hash: string | null;
 }
 
 export interface ModalState {
@@ -71,6 +76,7 @@ const initialModalState: ModalState = {
 const initialDeckState: DeckState = {
   name: null,
   cards: null,
+  hash: null,
 };
 
 const initialSettingsState: SettingsState = {
@@ -102,10 +108,17 @@ export function deck(
     case SET_DECK_CARDS: {
       const cards: Card[] = (action as SetDeckCardsAction).srcUris.map(
         (uri, i) =>
-          ({ name: capitalize(getFileName(uri)), srcUri: uri, id: i } as Card)
+          ({
+            name: capitalize(getFileName(uri)),
+            srcUri: uri,
+            id: i,
+            hash: CryptoJS.AES.encrypt(uri, "secret").toString(),
+          } as Card)
       );
       return { ...state, cards };
     }
+    case SET_MYSTERY_CARD_HASH:
+      return { ...state, hash: (action as SetMysteryCardHashAction).hash };
     default:
       return state;
   }

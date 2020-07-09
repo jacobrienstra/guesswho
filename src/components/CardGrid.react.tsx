@@ -2,7 +2,7 @@ import { connect, MapStateToProps } from "react-redux";
 import React from "react";
 import { css } from "@emotion/core";
 
-import { DeckState, State, SettingsState } from "../redux/reducers";
+import { DeckState, State, SettingsState, Card } from "../redux/reducers";
 
 import CharacterCard from "./CharacterCard.react";
 
@@ -19,13 +19,21 @@ type Props = DeckState & SettingsState;
 
 function CardGrid(props: Props): JSX.Element {
   const { cards } = props;
+
   // Shuffle array
-  const shuffled = cards ? cards.sort(() => 0.5 - Math.random()) : [];
-  // Get sub-array of first n elements after shuffled
-  const selected = shuffled.slice(0, props.numCards);
+  let selected: Card[] | null = null;
+  if (cards && props.hash) {
+    const hashCard = cards.find((card) => card.hash === props.hash);
+    const nonHashed = cards.filter((card) => card.hash !== props.hash);
+    const shuffled = nonHashed.sort(() => 0.5 - Math.random());
+    // Get sub-array of first n elements after shuffled
+    if (hashCard) {
+      selected = [...shuffled.slice(0, props.numCards), hashCard];
+    }
+  }
   return (
     <div css={grid}>
-      {cards
+      {selected
         ? selected.map(
             (card): JSX.Element => (
               <CharacterCard
