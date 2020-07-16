@@ -1,15 +1,7 @@
-import {
-  connect,
-  MapDispatchToPropsNonObject,
-  MapStateToProps,
-} from "react-redux";
-import React from "react";
+import { PortalWithState, Portal } from "react-portal";
+import React, { PropsWithChildren } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { css } from "@emotion/core";
-
-import { State, ModalState } from "../redux/reducers";
-import { SET_MODAL_SHOWN } from "../redux/actions";
-
-import Button from "./Button.react";
 
 const overlay = css`
   position: fixed;
@@ -66,12 +58,24 @@ const root = css`
         display: flex;
         flex-shrink: 0;
         align-items: center;
+        justify-content: space-between;
         padding: 8px 24px;
         border-bottom: 2px solid black;
 
         .title {
           margin-right: 12px;
           font-size: 16px;
+        }
+
+        .button {
+          padding: 6px 10px;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            color: white;
+            background-color: var(--blue);
+          }
         }
       }
 
@@ -80,7 +84,6 @@ const root = css`
         display: flex;
         flex: 1 0 auto;
         box-sizing: content-box;
-        margin: 24px;
         overflow-y: auto;
       }
 
@@ -100,45 +103,32 @@ const root = css`
   }
 `;
 
-type Props = ModalState & DispatchProps;
-
-function Modal(props: Props): JSX.Element | null {
-  return props.isShown ? (
+interface Props {
+  title: string;
+  footer?: React.ReactNode;
+  onClose: () => void;
+}
+function Modal(props: PropsWithChildren<Props>): JSX.Element | null {
+  return (
     <>
       <div css={overlay}>""</div>
       <div css={root} className="container">
         <div className="modal">
           <div className="header">
             <h2 className="title">{props.title}</h2>
+            <FontAwesomeIcon
+              icon="times"
+              size="lg"
+              className="button"
+              onClick={props.onClose}
+            />
           </div>
-          <div className="body">{props.content}</div>
-          <div className="footer">
-            <Button onClick={props.onClose ?? props.onModalClose}>Close</Button>
-          </div>
+          <div className="body">{props.children}</div>
+          {props.footer ? <div className="footer">{props.footer}</div> : null}
         </div>
       </div>
     </>
-  ) : null;
+  );
 }
 
-const mapStateToProps: MapStateToProps<ModalState, {}, State> = (state) => {
-  return {
-    ...state.modal,
-  };
-};
-
-interface DispatchProps {
-  onModalClose: () => void;
-}
-
-const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, {}> = (
-  dispatch
-) => {
-  return {
-    onModalClose: (): void => {
-      dispatch({ type: SET_MODAL_SHOWN, isShown: false });
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Modal);
+export default Modal;

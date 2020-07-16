@@ -1,9 +1,17 @@
 import React from "react";
+import {
+  faCheckSquare,
+  faTimes,
+  faTimesCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
 import { css } from "@emotion/core";
 
 import Modal from "./components/Modal.react";
 import DeckSelect from "./components/DeckSelect.react";
 import CardGrid from "./components/CardGrid.react";
+
+library.add(faCheckSquare, faTimes, faTimesCircle);
 
 const root = css`
   display: block;
@@ -17,11 +25,13 @@ const root = css`
 
 function App(): JSX.Element {
   return (
-    <div css={root}>
-      <DeckSelect />
-      <CardGrid />
-      <Modal />
-    </div>
+    <>
+      <div css={root}>
+        <DeckSelect />
+        <CardGrid />
+      </div>
+      <div id="portal-root" />
+    </>
   );
 }
 

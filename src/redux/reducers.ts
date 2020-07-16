@@ -1,10 +1,9 @@
 import { combineReducers } from "redux";
 import CryptoJS from "crypto-js";
 
+import { nameCase, getFileName } from "../util";
+
 import {
-  MODAL_ACTION,
-  SET_MODAL_CONTENT,
-  SET_MODAL_SHOWN,
   SET_DECK_NAME,
   SET_DECK_CARDS,
   DECK_ACTION,
@@ -13,28 +12,11 @@ import {
   SET_SHOW_NAMES,
   SetNumCardsAction,
   SetShowNamesAction,
-  SetModalShownAction,
   SetDeckNameAction,
   SetDeckCardsAction,
   SET_MYSTERY_CARD_HASH,
   SetMysteryCardHashAction,
 } from "./actions";
-
-function capitalize(s: string): string {
-  return s
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
-function getFileName(f: string): string {
-  const parts = f.split("/");
-  if (parts) {
-    const last = parts.pop();
-    if (last) return last.split(".")[0];
-  }
-  return f.split(".")[0];
-}
 
 export interface Card {
   name: string;
@@ -45,7 +27,6 @@ export interface Card {
 
 export interface State {
   deck: DeckState;
-  modal: ModalState;
   settings: SettingsState;
 }
 
@@ -59,19 +40,6 @@ export interface DeckState {
   cards: Card[] | null;
   hash: string | null;
 }
-
-export interface ModalState {
-  isShown: boolean;
-  title: string;
-  content: JSX.Element | null;
-  onClose?: () => void; // Set this in component;
-}
-
-const initialModalState: ModalState = {
-  isShown: false,
-  title: "",
-  content: null,
-};
 
 const initialDeckState: DeckState = {
   name: null,
@@ -109,7 +77,7 @@ export function deck(
       const cards: Card[] = (action as SetDeckCardsAction).srcUris.map(
         (uri, i) =>
           ({
-            name: capitalize(getFileName(uri)),
+            name: nameCase(getFileName(uri)),
             srcUri: uri,
             id: i,
             hash: CryptoJS.AES.encrypt(uri, "secret").toString(),
@@ -124,21 +92,6 @@ export function deck(
   }
 }
 
-export function modal(
-  state: ModalState = initialModalState,
-  action: MODAL_ACTION
-): ModalState {
-  const { type, ...rest } = action;
-  switch (type) {
-    case SET_MODAL_CONTENT:
-      return { ...state, ...rest };
-    case SET_MODAL_SHOWN:
-      return { ...state, isShown: (action as SetModalShownAction).isShown };
-    default:
-      return state;
-  }
-}
-
-const guessWhoApp = combineReducers({ modal, deck, settings });
+const guessWhoApp = combineReducers({ deck, settings });
 
 export default guessWhoApp;

@@ -75,6 +75,7 @@ module.exports = {
     "no-nested-ternary": "off",
     "prettier/prettier": "error",
     "react/display-name": "off",
+    "max-classes-per-file": "off",
     "react/jsx-key": "warn",
     "react/no-unescaped-entities": "off",
     "react/prop-types": "warn",

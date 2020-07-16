@@ -7,7 +7,7 @@ const button = css`
   justify-content: center;
   box-sizing: content-box;
   width: 100%;
-  min-width: 160px;
+  min-width: 100px;
   max-width: 240px;
   margin: 8px;
   padding: 16px 24px;
@@ -15,7 +15,7 @@ const button = css`
   font-weight: 700;
   font-size: 1rem;
   text-align: center;
-  background-color: #00a0ff;
+  background-color: var(--blue);
   border: none;
   border-radius: 4px;
   cursor: pointer;
