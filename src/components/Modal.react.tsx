@@ -89,9 +89,10 @@ const root = css`
 
       .footer {
         display: flex;
+        flex-direction: row;
         flex-shrink: 0;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         padding: 8px 24px;
         border-top: 2px solid black;
 

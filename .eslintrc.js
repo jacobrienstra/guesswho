@@ -73,6 +73,10 @@ module.exports = {
     "no-console": "warn",
     "no-inner-declarations": "off",
     "no-nested-ternary": "off",
+    "@typescript-eslint/no-empty-function": [
+      "error",
+      { allow: ["arrowFunctions"] },
+    ],
     "prettier/prettier": "error",
     "react/display-name": "off",
     "max-classes-per-file": "off",

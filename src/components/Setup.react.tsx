@@ -46,11 +46,13 @@ const selector = css`
 
     .step {
       padding: 8px 16px;
+      font-weight: 700;
       border-radius: 4px;
       cursor: pointer;
     }
 
     .current {
+      color: white;
       background: var(--blue);
     }
   }
@@ -65,19 +67,49 @@ const selector = css`
 type OwnProps = {
   onClose: () => void;
 };
+
+type StateProps = {
+  chosenDeck: string | null;
+};
 const getDeck = async (): Promise<IItemsResponse> => sdk.getItems("decks");
 
-function Setup(props: OwnProps & State): JSX.Element {
+function Setup(props: OwnProps & StateProps): JSX.Element {
   const [step, setStep] = React.useState<number>(0);
   const { run, isPending, data } = useAsync({ deferFn: getDeck });
   const steps = ["Select Deck", "Get Card"];
+  const atLastStep = step === steps.length - 1;
+  const atFirstStep = step === 0;
+  const nextStep = (): void => {
+    if (!atLastStep) {
+      setStep(step + 1);
+    }
+  };
+
+  const prevStep = (): void => {
+    if (!atFirstStep) {
+      setStep(step - 1);
+    }
+  };
 
   React.useEffect(() => {
     run();
   }, [run]);
 
   return (
-    <Modal title="Setup" onClose={props.onClose}>
+    <Modal
+      title="Setup"
+      onClose={props.onClose}
+      footer={
+        <>
+          <Button onClick={prevStep} hidden={atFirstStep}>
+            Back
+          </Button>
+          <Button onClick={nextStep} hidden={atLastStep}>
+            Next
+          </Button>
+        </>
+      }
+    >
       <div css={selector}>
         <div className="sidebar">
           {steps.map((s, i) => (
@@ -99,34 +131,19 @@ function Setup(props: OwnProps & State): JSX.Element {
             </div>
           ) : null}
           {data ? (
-            <>
-              {/* {data.data.map((deck: Record<string, any>) => (
-                <Button
-                  key={deck.name}
-                  onClick={(): void => {
-                    dispatch({ type: SET_DECK_NAME, name: deck.name });
-                  }}
-                >
-                  {capitalize(deck.name)}
-                </Button>
-              ))} */}
-              <FancySelect
-                items={[
-                  { value: "test", text: "Test 1" },
-                  { value: "test 2", text: "Test 2" },
-                  { value: "test 3", text: "Test 3" },
-                  { value: "test 4", text: "Test 4" },
-                ]}
-                value={props.deck.name}
-                toggle={(item): void => {
-                  if (props.deck.name === item.value) {
-                    dispatch({ type: SET_DECK_NAME, name: null });
-                  } else {
-                    dispatch({ type: SET_DECK_NAME, name: item.value });
-                  }
-                }}
-              />
-            </>
+            <FancySelect
+              items={data.data.map((deck: Record<string, any>) => {
+                return { value: deck.name, text: capitalize(deck.name) };
+              })}
+              value={props.chosenDeck}
+              toggle={(item): void => {
+                if (props.chosenDeck === item.value) {
+                  dispatch({ type: SET_DECK_NAME, name: null });
+                } else {
+                  dispatch({ type: SET_DECK_NAME, name: item.value });
+                }
+              }}
+            />
           ) : null}
         </div>
       </div>
@@ -134,11 +151,11 @@ function Setup(props: OwnProps & State): JSX.Element {
   );
 }
 
-const mapStateToProps: MapStateToProps<State, OwnProps, State & OwnProps> = (
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, State> = (
   state
 ) => {
   return {
-    ...state,
+    chosenDeck: state.deck.name,
   };
 };
 
