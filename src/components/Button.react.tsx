@@ -6,10 +6,9 @@ const button = css`
   align-items: flex-start;
   justify-content: center;
   box-sizing: content-box;
-  width: 100%;
   min-width: 100px;
   max-width: 240px;
-  margin: 8px;
+  margin: 8px 0;
   padding: 16px 24px;
   color: white;
   font-weight: 700;

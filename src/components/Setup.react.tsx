@@ -11,6 +11,7 @@ import { capitalize } from "../util";
 import { State } from "../redux/reducers";
 
 import Modal from "./Modal.react";
+import FancySelect from "./FancySelect.react";
 import Button from "./Button.react";
 
 import { dispatch } from "src/redux/store";
@@ -32,11 +33,13 @@ const loading = css`
 
 const selector = css`
   display: flex;
+  width: 100%;
+  height: 100%;
   direction: row;
 
   .sidebar {
     display: flex;
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     flex-direction: column;
     padding: 16px;
     border-right: 2px solid black;
@@ -54,7 +57,7 @@ const selector = css`
 
   .content {
     display: flex;
-    flex: 2 1 auto;
+    flex: 3 0 auto;
     flex-direction: column;
     padding: 16px;
   }
@@ -64,7 +67,7 @@ type OwnProps = {
 };
 const getDeck = async (): Promise<IItemsResponse> => sdk.getItems("decks");
 
-function Setup(props: OwnProps): JSX.Element {
+function Setup(props: OwnProps & State): JSX.Element {
   const [step, setStep] = React.useState<number>(0);
   const { run, isPending, data } = useAsync({ deferFn: getDeck });
   const steps = ["Select Deck", "Get Card"];
@@ -96,8 +99,8 @@ function Setup(props: OwnProps): JSX.Element {
             </div>
           ) : null}
           {data ? (
-            <div>
-              {data.data.map((deck: Record<string, any>) => (
+            <>
+              {/* {data.data.map((deck: Record<string, any>) => (
                 <Button
                   key={deck.name}
                   onClick={(): void => {
@@ -106,8 +109,24 @@ function Setup(props: OwnProps): JSX.Element {
                 >
                   {capitalize(deck.name)}
                 </Button>
-              ))}
-            </div>
+              ))} */}
+              <FancySelect
+                items={[
+                  { value: "test", text: "Test 1" },
+                  { value: "test 2", text: "Test 2" },
+                  { value: "test 3", text: "Test 3" },
+                  { value: "test 4", text: "Test 4" },
+                ]}
+                value={props.deck.name}
+                toggle={(item): void => {
+                  if (props.deck.name === item.value) {
+                    dispatch({ type: SET_DECK_NAME, name: null });
+                  } else {
+                    dispatch({ type: SET_DECK_NAME, name: item.value });
+                  }
+                }}
+              />
+            </>
           ) : null}
         </div>
       </div>

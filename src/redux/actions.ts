@@ -5,7 +5,7 @@ export const SET_DECK_CARDS = "SET_DECK_CARDS";
 export const SET_MYSTERY_CARD_HASH = "SET_MYSTERY_CARD_HASH";
 
 export type SetDeckNameAction = Action<typeof SET_DECK_NAME> & {
-  name: string;
+  name: string | null;
 };
 
 export type SetDeckCardsAction = Action<typeof SET_DECK_CARDS> & {
