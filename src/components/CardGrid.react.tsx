@@ -2,7 +2,7 @@ import { connect, MapStateToProps } from "react-redux";
 import React from "react";
 import { css } from "@emotion/core";
 
-import { DeckState, State, SettingsState, Card } from "../redux/reducers";
+import { Card } from "../redux/types";
 
 import CharacterCard from "./CharacterCard.react";
 
@@ -15,56 +15,31 @@ const grid = css`
   width: 100%;
 `;
 
-type Props = DeckState & SettingsState;
+interface OwnProps {
+  cards: Card[];
+}
 
-function CardGrid(props: Props): JSX.Element {
+export default function CardGrid(props: OwnProps): JSX.Element {
   const { cards } = props;
 
-  // Shuffle array
-  let selected: Card[] | null = null;
-  let shuffled: Card[] | null = null;
-  let hashCard: Card | undefined;
-  if (cards) {
-    if (props.hash) {
-      hashCard = cards.find((card) => card.hash === props.hash);
-      const nonHashed = cards.filter((card) => card.hash !== props.hash);
-      shuffled = nonHashed.sort(() => 0.5 - Math.random());
-    } else {
-      shuffled = cards.sort(() => 0.5 - Math.random());
-    }
-
-    // Get sub-array of first n elements after shuffled
-    selected = [...shuffled.slice(0, props.numCards)];
-    if (hashCard) {
-      selected.push(hashCard);
-    }
-  }
   return (
     <div css={grid}>
-      {selected
-        ? selected.map(
-            (card): JSX.Element => (
-              <CharacterCard
-                fileSrc={card.srcUri}
-                key={card.id}
-                id={card.id}
-                name={card.name}
-                showName={props.showNames}
-              />
-            )
-          )
-        : null}
+      {cards.map(
+        (card: Card): JSX.Element => (
+          <CharacterCard key={card.id} card={card} />
+        )
+      )}
     </div>
   );
 }
 
-const mapStateToProps: MapStateToProps<DeckState & SettingsState, {}, State> = (
-  state
-) => {
-  return {
-    ...state.deck,
-    ...state.settings,
-  };
-};
+// const mapStateToProps: MapStateToProps<DeckState & SettingsState, {}, State> = (
+//   state
+// ) => {
+//   return {
+//     ...state.deck,
+//     ...state.settings,
+//   };
+// };
 
-export default connect(mapStateToProps)(CardGrid);
+// export default connect(mapStateToProps)(CardGrid);

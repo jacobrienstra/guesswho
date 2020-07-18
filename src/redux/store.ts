@@ -1,7 +1,11 @@
-import { createStore } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 
-import guessWhoApp from "./reducers";
+import { gameReducer, settingsReducer, apiReducer } from "./reducers";
 
-const store = createStore(guessWhoApp);
-export const { dispatch } = store;
+const store = configureStore({
+  reducer: { game: gameReducer, settigns: settingsReducer, api: apiReducer },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+
 export default store;

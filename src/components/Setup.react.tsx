@@ -1,27 +1,25 @@
-import { connect, MapStateToProps } from "react-redux";
+import {
+  connect,
+  MapStateToProps,
+  useDispatch,
+  useSelector,
+} from "react-redux";
 import ReactLoading from "react-loading";
-import { useAsync } from "react-async";
+import { useAsync, StatusTypes } from "react-async";
 import React from "react";
 import { cx } from "emotion";
 import { css } from "@emotion/core";
-import { IItemsResponse } from "@directus/sdk-js/dist/types/schemes/response/Item";
-import SDK from "@directus/sdk-js";
 
 import { capitalize } from "../util";
-import { State } from "../redux/reducers";
 
 import Modal from "./Modal.react";
 import FancySelect from "./FancySelect.react";
+import CardGrid from "./CardGrid.react";
 import Button from "./Button.react";
 
-import { dispatch } from "src/redux/store";
-import { SET_DECK_NAME } from "src/redux/actions";
-
-export const sdk = new SDK({
-  url: "http://167.172.1.48/",
-  project: "guesswho",
-  mode: "cookie",
-});
+import { Status } from "src/redux/types";
+import { RootState } from "src/redux/store";
+import { fetchDecks } from "src/redux/reducers/game";
 
 const loading = css`
   display: flex;
@@ -64,19 +62,19 @@ const selector = css`
     padding: 16px;
   }
 `;
-type OwnProps = {
+interface Props {
   onClose: () => void;
-};
+}
 
-type StateProps = {
-  chosenDeck: string | null;
-};
-const getDeck = async (): Promise<IItemsResponse> => sdk.getItems("decks");
-
-function Setup(props: OwnProps & StateProps): JSX.Element {
+function Setup(props: Props): JSX.Element {
   const [step, setStep] = React.useState<number>(0);
-  const { run, isPending, data } = useAsync({ deferFn: getDeck });
-  const steps = ["Select Deck", "Get Card"];
+  const dispatch = useDispatch();
+  const decks = useSelector((state: RootState) => state.game.decks.value);
+  const decksStatus = useSelector(
+    (state: RootState) => state.game.decks.status
+  );
+
+  const steps = ["Choose Deck", "Choose Card"];
   const atLastStep = step === steps.length - 1;
   const atFirstStep = step === 0;
   const nextStep = (): void => {
@@ -92,8 +90,10 @@ function Setup(props: OwnProps & StateProps): JSX.Element {
   };
 
   React.useEffect(() => {
-    run();
-  }, [run]);
+    if (decksStatus === Status.unFetched) {
+      dispatch(fetchDecks());
+    }
+  }, [decksStatus, dispatch]);
 
   return (
     <Modal
@@ -125,38 +125,60 @@ function Setup(props: OwnProps & StateProps): JSX.Element {
           ))}
         </div>
         <div className="content">
-          {isPending ? (
-            <div css={loading}>
-              <ReactLoading type="spin" color="var(--blue)" />
-            </div>
-          ) : null}
-          {data ? (
-            <FancySelect
-              items={data.data.map((deck: Record<string, any>) => {
-                return { value: deck.name, text: capitalize(deck.name) };
-              })}
-              value={props.chosenDeck}
-              toggle={(item): void => {
-                if (props.chosenDeck === item.value) {
-                  dispatch({ type: SET_DECK_NAME, name: null });
-                } else {
-                  dispatch({ type: SET_DECK_NAME, name: item.value });
+          {((): JSX.Element | null => {
+            switch (step) {
+              case 0: {
+                if (decksStatus === Status.isPending) {
+                  return (
+                    <div css={loading}>
+                      <ReactLoading type="spin" color="var(--blue)" />
+                    </div>
+                  );
                 }
-              }}
-            />
-          ) : null}
+                if (decksStatus === Status.hasSucceeded) {
+                  return (
+                    <FancySelect
+                      items={decks.map((deck) => {
+                        return {
+                          value: deck,
+                          text: capitalize(deck),
+                        };
+                      })}
+                      value={props.chosenDeck}
+                      toggle={(item): void => {
+                        if (props.chosenDeck === item.value) {
+                          dispatch({ type: SET_DECK_NAME, name: null });
+                        } else {
+                          dispatch({ type: SET_DECK_NAME, name: item.value });
+                        }
+                      }}
+                    />
+                  );
+                }
+                break;
+              }
+              case 1: {
+                if (cardsStatus.isPending) {
+                  return (
+                    <div css={loading}>
+                      <ReactLoading type="spin" color="var(--blue)" />
+                    </div>
+                  );
+                }
+                if (cardsStatus.data) {
+                  return <CardGrid cards={props.allCards} />;
+                }
+              }
+              default: {
+                return null;
+              }
+            }
+            return null;
+          })()}
         </div>
       </div>
     </Modal>
   );
 }
 
-const mapStateToProps: MapStateToProps<StateProps, OwnProps, State> = (
-  state
-) => {
-  return {
-    chosenDeck: state.deck.name,
-  };
-};
-
-export default connect(mapStateToProps)(Setup);
+export default Setup;

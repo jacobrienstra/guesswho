@@ -1,6 +1,9 @@
+import { connect, MapStateToProps } from "react-redux";
 import React from "react";
 import { cx } from "emotion";
 import { css } from "@emotion/core";
+
+import { Card } from "../redux/types";
 
 const card = css`
   position: relative;
@@ -77,15 +80,16 @@ const card = css`
   }
 `;
 
-type Props = {
-  fileSrc: string;
-  name: string;
-  id: number;
+type OwnProps = {
+  card: Card;
+};
+
+type StateProps = {
   showName: boolean;
 };
 
-function CharacterCard(props: Props): JSX.Element {
-  const { fileSrc, name, id } = props;
+function CharacterCard(props: OwnProps & StateProps): JSX.Element {
+  const { srcUri, name, id } = props.card;
   const [isVisible, setVisible] = React.useState(true);
   return (
     <div
@@ -97,7 +101,7 @@ function CharacterCard(props: Props): JSX.Element {
       <div className="flipper">
         <div className="front">
           <div className="container">
-            <img src={fileSrc} alt={name} width={200} />
+            <img src={srcUri} alt={name} width={200} />
             {props.showName ? <div className="name">{name}</div> : null}
           </div>
         </div>

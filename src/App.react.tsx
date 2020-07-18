@@ -28,7 +28,7 @@ function App(): JSX.Element {
     <>
       <div css={root}>
         <DeckSelect />
-        <CardGrid />
+        {/* <CardGrid /> */}
       </div>
       <div id="portal-root" />
     </>
