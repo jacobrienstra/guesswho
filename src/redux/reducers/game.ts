@@ -3,7 +3,7 @@ import { createSlice, PayloadAction, Dispatch } from "@reduxjs/toolkit";
 
 import { Card } from "../types";
 
-import { fetchCards } from "./api";
+import { fetchCards, removeCards } from "./api";
 
 interface GameSliceState {
   deck?: string;
@@ -15,7 +15,7 @@ export const gameSlice = createSlice({
   name: "game",
   initialState: {} as GameSliceState,
   reducers: {
-    setDeck: (state, action: PayloadAction<string>): void => {
+    setDeck: (state, action: PayloadAction<string | undefined>): void => {
       state.deck = action.payload;
     },
     setPlayerCard: (state, action: PayloadAction<Card>): void => {
@@ -29,9 +29,15 @@ export const gameSlice = createSlice({
 
 export const { setDeck, setPlayerCard, setOpponentCard } = gameSlice.actions;
 
-export const setDeckAndCards = (deck: string) => (dispatch: Dispatch): void => {
+export const setDeckAndCards = (deck: string) => (
+  dispatch: Dispatch<any>
+): void => {
   dispatch(setDeck(deck));
-  fetchCards(deck);
+  if (deck != null) {
+    dispatch(fetchCards(deck));
+  } else {
+    removeCards();
+  }
 };
 
 export default gameSlice.reducer;

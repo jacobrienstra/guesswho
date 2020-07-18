@@ -1,4 +1,3 @@
-import { PortalWithState, Portal } from "react-portal";
 import React, { PropsWithChildren } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { css } from "@emotion/core";
@@ -82,8 +81,8 @@ const root = css`
       .body {
         position: relative;
         display: flex;
-        flex: 1 0 auto;
-        box-sizing: content-box;
+        flex: 1 1 auto;
+        overflow-x: hidden;
         overflow-y: auto;
       }
 

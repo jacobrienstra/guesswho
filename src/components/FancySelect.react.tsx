@@ -54,7 +54,7 @@ const root = css`
 
 interface Props {
   items: Array<FancySelectItem>;
-  value: string | null;
+  value: string | undefined;
   toggle: (item: FancySelectItem) => void;
 }
 
@@ -83,7 +83,7 @@ function FancySelect(props: Props): JSX.Element {
     >
       {items.map((item, i) => {
         const selected = item.value === value;
-        const hasSelected = value !== null;
+        const hasSelected = value != null;
         const notSelected = hasSelected && !selected;
         return (
           <Flipped

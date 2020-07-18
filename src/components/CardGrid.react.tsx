@@ -1,4 +1,3 @@
-import { connect, MapStateToProps } from "react-redux";
 import React from "react";
 import { css } from "@emotion/core";
 
@@ -17,6 +16,7 @@ const grid = css`
 
 interface OwnProps {
   cards: Card[];
+  height?: number;
 }
 
 export default function CardGrid(props: OwnProps): JSX.Element {
@@ -26,20 +26,9 @@ export default function CardGrid(props: OwnProps): JSX.Element {
     <div css={grid}>
       {cards.map(
         (card: Card): JSX.Element => (
-          <CharacterCard key={card.id} card={card} />
+          <CharacterCard key={card.id} card={card} height={props.height} />
         )
       )}
     </div>
   );
 }
-
-// const mapStateToProps: MapStateToProps<DeckState & SettingsState, {}, State> = (
-//   state
-// ) => {
-//   return {
-//     ...state.deck,
-//     ...state.settings,
-//   };
-// };
-
-// export default connect(mapStateToProps)(CardGrid);

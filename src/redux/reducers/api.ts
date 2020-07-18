@@ -33,15 +33,20 @@ export const fetchCards = createAsyncThunk(
       {
         id: number;
         name: string;
-        image: { src: string };
+        image: { data: { full_url: string } };
         deck: { name: string };
       }[]
     >("cards", {
+      fields: ["id", "name", "image.data.full_url", "deck.name"],
       filter: { "deck.name": { eq: deck } },
     });
     return data.map(
       (card) =>
-        ({ name: card.name, id: card.id, srcUri: card.image.src } as Card)
+        ({
+          name: card.name,
+          id: card.id,
+          srcUri: card.image.data.full_url,
+        } as Card)
     ) as Card[];
   }
 );
@@ -61,7 +66,11 @@ const apiSlice = createSlice({
     },
     cards: initialCardsState,
   } as APISliceState,
-  reducers: {},
+  reducers: {
+    removeCards: (state): void => {
+      cardsAdapter.removeAll(state.cards);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchCards.pending, (state) => {
       state.cards.status = Status.isPending;
@@ -88,12 +97,12 @@ const apiSlice = createSlice({
   },
 });
 
+export const { removeCards } = apiSlice.actions;
+
 export const {
   selectAll: selectAllCards,
   selectById: selectCardById,
   selectIds: selectCardIds,
-
-  // Pass in a selector that returns the posts slice of state
 } = cardsAdapter.getSelectors((state: RootState) => state.api.cards);
 
 export default apiSlice.reducer;

@@ -1,11 +1,13 @@
-import { connect, MapStateToProps } from "react-redux";
+import { useSelector } from "react-redux";
 import React from "react";
 import { cx } from "emotion";
-import { css } from "@emotion/core";
+import { css, SerializedStyles } from "@emotion/core";
 
 import { Card } from "../redux/types";
 
-const card = css`
+import { RootState } from "src/redux/store";
+
+const card = (height: number): SerializedStyles => css`
   position: relative;
   display: block;
   flex: 0 1 auto;
@@ -40,8 +42,8 @@ const card = css`
   &,
   .front,
   .back {
-    width: 216px;
-    height: 260px;
+    width: ${height * 0.8}px;
+    height: ${height}px;
   }
 
   /* hide back of pane during swap */
@@ -80,33 +82,35 @@ const card = css`
   }
 `;
 
-type OwnProps = {
+interface Props {
   card: Card;
-};
+  height?: number;
+  onClick?: () => void;
+}
 
-type StateProps = {
-  showName: boolean;
-};
-
-function CharacterCard(props: OwnProps & StateProps): JSX.Element {
+function CharacterCard(props: Props): JSX.Element {
   const { srcUri, name, id } = props.card;
+  const { height = 260 } = props;
   const [isVisible, setVisible] = React.useState(true);
+  const showName = useSelector((state: RootState) => state.settings.showName);
   return (
     <div
-      css={card}
+      css={card(height)}
       key={id}
       className={cx({ eliminated: !isVisible }, ["card", "flip-container"])}
-      onClick={(): void => setVisible(!isVisible)}
+      onClick={
+        props.onClick ? props.onClick : (): void => setVisible(!isVisible)
+      }
     >
       <div className="flipper">
         <div className="front">
           <div className="container">
-            <img src={srcUri} alt={name} width={200} />
-            {props.showName ? <div className="name">{name}</div> : null}
+            <img src={srcUri} alt={name} width={height * 0.8 - 16} />
+            {showName ? <div className="name">{name}</div> : null}
           </div>
         </div>
         <div className="back">
-          {props.showName ? <div className="name">{name}</div> : null}
+          {showName ? <div className="name">{name}</div> : null}
         </div>
       </div>
     </div>

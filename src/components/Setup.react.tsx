@@ -1,11 +1,5 @@
-import {
-  connect,
-  MapStateToProps,
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from "react-loading";
-import { useAsync, StatusTypes } from "react-async";
 import React from "react";
 import { cx } from "emotion";
 import { css } from "@emotion/core";
@@ -19,7 +13,8 @@ import Button from "./Button.react";
 
 import { Status } from "src/redux/types";
 import { RootState } from "src/redux/store";
-import { fetchDecks } from "src/redux/reducers/game";
+import { setDeckAndCards, setDeck } from "src/redux/reducers/game";
+import { fetchDecks, selectAllCards } from "src/redux/reducers/api";
 
 const loading = css`
   display: flex;
@@ -31,13 +26,13 @@ const loading = css`
 
 const selector = css`
   display: flex;
+  flex-direction: row;
   width: 100%;
   height: 100%;
-  direction: row;
 
   .sidebar {
     display: flex;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     flex-direction: column;
     padding: 16px;
     border-right: 2px solid black;
@@ -57,9 +52,11 @@ const selector = css`
 
   .content {
     display: flex;
-    flex: 3 0 auto;
+    flex: 3 1 auto;
     flex-direction: column;
     padding: 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 `;
 interface Props {
@@ -69,10 +66,11 @@ interface Props {
 function Setup(props: Props): JSX.Element {
   const [step, setStep] = React.useState<number>(0);
   const dispatch = useDispatch();
-  const decks = useSelector((state: RootState) => state.game.decks.value);
-  const decksStatus = useSelector(
-    (state: RootState) => state.game.decks.status
-  );
+  const decks = useSelector((state: RootState) => state.api.decks.value);
+  const decksStatus = useSelector((state: RootState) => state.api.decks.status);
+  const cardsStatus = useSelector((state: RootState) => state.api.cards.status);
+  const cards = useSelector((state: RootState) => selectAllCards(state));
+  const deck = useSelector((state: RootState) => state.game.deck);
 
   const steps = ["Choose Deck", "Choose Card"];
   const atLastStep = step === steps.length - 1;
@@ -101,10 +99,10 @@ function Setup(props: Props): JSX.Element {
       onClose={props.onClose}
       footer={
         <>
-          <Button onClick={prevStep} hidden={atFirstStep}>
+          <Button onClick={prevStep} disabled={atFirstStep}>
             Back
           </Button>
-          <Button onClick={nextStep} hidden={atLastStep}>
+          <Button onClick={nextStep} disabled={atLastStep}>
             Next
           </Button>
         </>
@@ -135,21 +133,21 @@ function Setup(props: Props): JSX.Element {
                     </div>
                   );
                 }
-                if (decksStatus === Status.hasSucceeded) {
+                if (decksStatus === Status.hasSucceeded && decks) {
                   return (
                     <FancySelect
-                      items={decks.map((deck) => {
+                      items={decks.map((d) => {
                         return {
-                          value: deck,
-                          text: capitalize(deck),
+                          value: d,
+                          text: capitalize(d),
                         };
                       })}
-                      value={props.chosenDeck}
+                      value={deck}
                       toggle={(item): void => {
-                        if (props.chosenDeck === item.value) {
-                          dispatch({ type: SET_DECK_NAME, name: null });
+                        if (deck === item.value) {
+                          dispatch(setDeck(undefined));
                         } else {
-                          dispatch({ type: SET_DECK_NAME, name: item.value });
+                          dispatch(setDeckAndCards(item.value));
                         }
                       }}
                     />
@@ -158,16 +156,17 @@ function Setup(props: Props): JSX.Element {
                 break;
               }
               case 1: {
-                if (cardsStatus.isPending) {
+                if (cardsStatus === Status.isPending) {
                   return (
                     <div css={loading}>
                       <ReactLoading type="spin" color="var(--blue)" />
                     </div>
                   );
                 }
-                if (cardsStatus.data) {
-                  return <CardGrid cards={props.allCards} />;
+                if (cardsStatus === Status.hasSucceeded && cards) {
+                  return <CardGrid cards={cards} height={100} />;
                 }
+                break;
               }
               default: {
                 return null;
