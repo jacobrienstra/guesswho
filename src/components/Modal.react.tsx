@@ -63,7 +63,7 @@ const root = css`
 
         .title {
           margin-right: 12px;
-          font-size: 16px;
+          font-size: 32px;
         }
 
         .button {

@@ -9,12 +9,14 @@ import {
   faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { css } from "@emotion/core";
 
 import { nameCase } from "./util";
 import type { RootState } from "./redux/store";
 import { endGame } from "./redux/reducers/game";
 import { selectCardById } from "./redux/reducers/api";
+import Settings from "./components/Settings.react";
 import DeckSelect from "./components/DeckSelect.react";
 import CharacterCard from "./components/CharacterCard.react";
 import CardGrid from "./components/CardGrid.react";
@@ -26,7 +28,8 @@ library.add(
   faTimesCircle,
   faCheckCircle,
   faInfoCircle,
-  faCog
+  faCog,
+  faSquare
 );
 
 const root = css`
@@ -109,6 +112,7 @@ function App(): JSX.Element {
         <div css={header}>
           <div className="level1">
             <div className="buttonHolder">
+              <Settings />
               <Button
                 onClick={(): void => {
                   dispatch(endGame());

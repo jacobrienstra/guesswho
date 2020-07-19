@@ -7,10 +7,10 @@ import Button from "./Button.react";
 type Props = {
   name: string;
   label: string;
-  value?: string;
-  isValid: boolean;
-  onSubmit: (val: string | undefined) => void;
-  submitText?: string;
+  value?: number;
+  min: number;
+  max: number;
+  onSubmit: (val: number | undefined) => void;
 };
 
 const root = css`
@@ -22,7 +22,7 @@ const root = css`
     align-items: center;
     font-weight: 700;
     font-size: 1.5rem;
-    input[type="text"] {
+    input[type="number"] {
       margin: 0 1rem;
       padding: 0.5rem;
       font-size: 1.5rem;
@@ -36,15 +36,8 @@ const root = css`
   }
 `;
 
-function Input(props: Props): JSX.Element {
-  const {
-    name,
-    label,
-    value,
-    isValid,
-    onSubmit,
-    submitText = isValid ? "ReSubmit" : "Submit",
-  } = props;
+function NumberInput(props: Props): JSX.Element {
+  const { name, label, value, onSubmit, min, max } = props;
 
   const [val, setVal] = React.useState(value);
 
@@ -54,32 +47,25 @@ function Input(props: Props): JSX.Element {
         {label}
         <input
           name={name}
-          type="text"
+          type="number"
           value={val}
+          min={min}
+          max={max}
           onKeyUp={(e: React.KeyboardEvent): void => {
             if (e.keyCode === 13) {
-              onSubmit(val);
+              // setVal(parseInt(e.target.value, 10));
+              if (val && val >= min && val <= max) onSubmit(val);
             }
           }}
-          onChange={(e: ChangeEvent<HTMLInputElement>): void => {
-            setVal(e.target.value);
+          onInput={(e: React.FormEvent<HTMLInputElement>): void => {
+            const v = parseInt((e.target as HTMLInputElement).value, 10);
+            setVal(v);
+            if (v >= min && v <= max) onSubmit(v);
           }}
         />
       </label>
-      {isValid ? (
-        <FontAwesomeIcon icon="check-circle" color="var(--green)" size="2x" />
-      ) : (
-        <FontAwesomeIcon icon="info-circle" color="grey" size="2x" />
-      )}
-
-      <Button
-        disabled={val == null || val === "" || val === value}
-        onClick={(): void => onSubmit(val)}
-      >
-        {submitText}
-      </Button>
     </div>
   );
 }
 
-export default Input;
+export default NumberInput;
