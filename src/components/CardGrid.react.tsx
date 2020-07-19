@@ -7,22 +7,24 @@ import { Card } from "../redux/types";
 import CharacterCard from "./CharacterCard.react";
 
 const grid = css`
-  display: flex;
+  display: grid;
   flex-direction: row;
   flex-wrap: wrap;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   align-content: flex-start;
   justify-content: center;
   width: 100%;
 `;
 
-interface OwnProps {
+interface Props {
   cards: Card[];
-  height?: number;
+  maxWidth?: number;
   onCardClick?: (card: Card) => void;
 }
 
-export default function CardGrid(props: OwnProps): JSX.Element {
-  const { cards, height, onCardClick } = props;
+export default function CardGrid(props: Props): JSX.Element {
+  const { cards, maxWidth, onCardClick } = props;
 
   return (
     <Flipper
@@ -35,7 +37,7 @@ export default function CardGrid(props: OwnProps): JSX.Element {
           <CharacterCard
             key={card.id}
             card={card}
-            height={height}
+            maxWidth={maxWidth}
             onClick={onCardClick ? (): void => onCardClick(card) : undefined}
           />
         )

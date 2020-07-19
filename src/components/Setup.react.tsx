@@ -77,6 +77,9 @@ function Setup(props: Props): JSX.Element {
   const cards = useSelector((state: RootState) => selectAllCards(state));
   const playerCard = useSelector((state: RootState) => state.game.playerCard);
   const deck = useSelector((state: RootState) => state.game.deck);
+  const opponentCard = useSelector(
+    (state: RootState) => state.game.opponentCard
+  );
 
   const toggleDeck = (value: string): void => {
     if (deck === value) {
@@ -94,11 +97,21 @@ function Setup(props: Props): JSX.Element {
     }
   };
 
-  const steps = ["Choose Deck", "Choose Card"];
+  interface Step {
+    name: string;
+    neededData: any;
+  }
+
+  const steps: Step[] = [
+    { name: "Choose Deck", neededData: deck },
+    { name: "Choose Card", neededData: playerCard },
+    { name: "Choose Opponent", neededData: opponentCard },
+  ];
   const atLastStep = step === steps.length - 1;
   const atFirstStep = step === 0;
+  const canAdvance = !atLastStep && steps[step].neededData != null;
   const nextStep = (): void => {
-    if (!atLastStep) {
+    if (canAdvance) {
       setStep(step + 1);
     }
   };
@@ -124,7 +137,7 @@ function Setup(props: Props): JSX.Element {
           <Button onClick={prevStep} disabled={atFirstStep}>
             Back
           </Button>
-          <Button onClick={nextStep} disabled={atLastStep}>
+          <Button onClick={nextStep} disabled={atLastStep || !canAdvance}>
             Next
           </Button>
         </>
@@ -134,13 +147,14 @@ function Setup(props: Props): JSX.Element {
         <div className="sidebar">
           {steps.map((s, i) => (
             <div
-              key={s}
+              key={s.name}
               className={cx(["step", { current: step === i }])}
               onClick={(): void => {
-                setStep(i);
+                if (steps.slice(0, i).every((st) => st.neededData != null))
+                  setStep(i);
               }}
             >
-              {s}
+              {s.name}
             </div>
           ))}
         </div>
@@ -191,7 +205,7 @@ function Setup(props: Props): JSX.Element {
                       toggle={toggleCard}
                       element={(item) => (
                         <CharacterCard
-                          height={100}
+                          maxWidth={100}
                           card={{ ...item }}
                           {...item}
                         />

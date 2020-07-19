@@ -1,102 +1,106 @@
 import { useSelector } from "react-redux";
 import React from "react";
 import { cx } from "emotion";
+import debounce from "debounce";
 import { css, SerializedStyles } from "@emotion/core";
 
 import { Card } from "../redux/types";
 
 import { RootState } from "src/redux/store";
 
-const cardStyle = (height: number): SerializedStyles => css`
-  position: relative;
-  display: block;
-  flex: 0 1 auto;
-  box-sizing: border-box; /* width: 100px; */
+const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
+  z-index: 0;
+  box-sizing: border-box;
+  max-width: ${maxWidth}px;
   margin: 16px;
-
-  /* entire container, keeps perspective */
-  perspective: 1000px;
+  perspective: 40rem;
   cursor: pointer;
-
-  .name {
-    padding-top: 4px;
-    color: black;
-    font-weight: 700;
-    font-size: 12px;
-    text-align: center;
-    word-wrap: normal;
-  }
+  transition: z-index;
+  transition-delay: 0.2s;
 
   /* flip speed goes here */
   .flipper {
-    position: relative;
+    display: flex;
     transform-style: preserve-3d;
     transition: 0.2s;
+
+    /* hide back of pane during swap */
+    .front,
+    .back {
+      min-width: 100%;
+      border: 2px solid black;
+      border-radius: 6px;
+      backface-visibility: hidden;
+    }
+
+    /* front pane, placed above back */
+    .front {
+      background: var(--lightblue);
+
+      /* transform: rotateY(180deg); */
+      .name {
+        padding-top: 4px;
+        color: black;
+        font-weight: 700;
+        font-size: 1rem;
+        text-align: center;
+        word-wrap: normal;
+      }
+      .container {
+        padding: 8px;
+        img {
+          width: 100%;
+        }
+      }
+    }
+
+    /* back, initially hidden pane */
+    .back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--blue);
+      transform: rotateX(-180deg) translate(-100%, 0);
+      .name {
+        color: white;
+        font-weight: 700;
+      }
+    }
   }
 
   /* flip the pane when hovered */
   &.eliminated .flipper {
-    transform: rotateY(180deg);
-  }
-
-  &,
-  .front,
-  .back {
-    width: ${height * 0.8}px;
-    height: ${height}px;
-  }
-
-  /* hide back of pane during swap */
-  .front,
-  .back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border: 2px solid black;
-    border-radius: 6px;
-    backface-visibility: hidden;
-  }
-
-  /* front pane, placed above back */
-  .front {
-    z-index: 2;
-    background: #e0e0e0;
-
-    /* for firefox 31 */
-    transform: rotateY(0deg);
-    .container {
-      padding: 8px;
-    }
-  }
-
-  /* back, initially hidden pane */
-  .back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #00a0ff;
-    transform: rotateY(180deg);
-    .name {
-      color: #e0e0e0;
-    }
+    z-index: 1;
+    transform: rotateX(-180deg);
+    transition-delay: 0s;
   }
 `;
 
 interface Props {
   card: Card;
-  height?: number;
+  maxWidth?: number;
   onClick?: () => void;
   className?: string;
 }
 
 function CharacterCard(props: Props): JSX.Element {
-  const { height = 260, card, onClick, className, ...rest } = props;
+  const { maxWidth, card, onClick, className, ...rest } = props;
   const { srcUri, name, id } = card;
   const [isVisible, setVisible] = React.useState(true);
   const showName = useSelector((state: RootState) => state.settings.showName);
+
+  const handleMouseEnter = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
+    if (e.buttons === 1 || e.buttons === 3) {
+      if (onClick) onClick();
+      else setVisible(!isVisible);
+    }
+  };
+
   return (
     <div
-      css={cardStyle(height)}
+      css={cardStyle(maxWidth)}
       key={id}
       className={cx({ eliminated: !isVisible }, [
         "card",
@@ -104,12 +108,14 @@ function CharacterCard(props: Props): JSX.Element {
         className,
       ])}
       onClick={onClick || ((): void => setVisible(!isVisible))}
+      onMouseEnter={handleMouseEnter}
+      onFocus={(): void => {}}
       {...rest}
     >
       <div className="flipper">
         <div className="front">
           <div className="container">
-            <img src={srcUri} alt={name} width={height * 0.8 - 16} />
+            <img src={srcUri} alt={name} />
             {showName ? <div className="name">{name}</div> : null}
           </div>
         </div>

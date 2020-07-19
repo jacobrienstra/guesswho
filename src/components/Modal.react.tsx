@@ -40,10 +40,10 @@ const root = css`
       flex-direction: column;
       box-sizing: content-box;
       width: calc(100% - 16px);
-      max-width: 600px;
+      max-width: 90%;
       height: calc(100% - 16px);
       max-height: 90%;
-      margin: 24px;
+      margin-top: 24px;
       overflow-y: hidden;
       background: white;
       border-radius: 4px;

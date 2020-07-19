@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import React from "react";
 import {
   faCheckSquare,
@@ -7,6 +8,7 @@ import {
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { css } from "@emotion/core";
 
+import { selectAllCards } from "./redux/reducers/api";
 import Modal from "./components/Modal.react";
 import DeckSelect from "./components/DeckSelect.react";
 import CardGrid from "./components/CardGrid.react";
@@ -28,7 +30,7 @@ function App(): JSX.Element {
     <>
       <div css={root}>
         <DeckSelect />
-        {/* <CardGrid /> */}
+        <CardGrid cards={useSelector(selectAllCards)} />
       </div>
       <div id="portal-root" />
     </>

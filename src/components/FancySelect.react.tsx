@@ -44,15 +44,17 @@ const root = css`
   flex-wrap: wrap;
 
   & .select-option {
+    transition: all;
     &.selected {
       position: relative;
-      z-index: 2;
+      z-index: 3;
+      max-width: none;
     }
 
     &.not-selected {
       position: absolute;
       cursor: auto;
-      opacity: 1;
+      opacity: 0;
     }
 
     &.hidden {

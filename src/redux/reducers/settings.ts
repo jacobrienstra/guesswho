@@ -10,7 +10,7 @@ export const settingsSlice = createSlice({
   name: "game",
   initialState: {
     numCards: 24,
-    showName: false,
+    showName: true,
   } as SettingsSliceState,
   reducers: {
     setNumCards: (state, action: PayloadAction<number>): void => {
