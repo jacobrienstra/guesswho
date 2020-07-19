@@ -84,15 +84,16 @@ const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
   }
 `;
 
-interface Props {
+type Props = {
   card: Card;
   maxWidth?: number;
   onClick?: () => void;
   className?: string;
-}
+  style?: React.CSSProperties;
+};
 
 function CharacterCard(props: Props): JSX.Element {
-  const { maxWidth, card, onClick, className, ...rest } = props;
+  const { maxWidth, card, onClick, className, style, ...rest } = props;
   const { srcUri, name, id } = card;
   const [isVisible, setVisible] = React.useState(true);
   const showName = useSelector((state: RootState) => state.settings.showName);
@@ -118,6 +119,7 @@ function CharacterCard(props: Props): JSX.Element {
       onClick={onClick || ((): void => setVisible(!isVisible))}
       onMouseEnter={handleMouseEnter}
       onFocus={(): void => {}}
+      style={style}
       {...rest}
     >
       <div className="flipper">

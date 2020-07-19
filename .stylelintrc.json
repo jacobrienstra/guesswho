@@ -14,6 +14,7 @@
   "rules": {
     "custom-property-empty-line-before": null,
     "declaration-empty-line-before": ["never"],
+    "value-keyword-case": null,
     "selector-max-compound-selectors": null,
     "order/properties-order": [[], { "severity": "warning" }],
     "plugin/rational-order": [

@@ -57,7 +57,7 @@ function Button(props: PropsWithChildren<Props>): JSX.Element {
       {...rest}
       css={button}
       onClick={onClick}
-      className={cx({ disabled, hidden })}
+      className={cx({ disabled, hidden }, ["button"])}
     >
       {props.children}
     </Tag>

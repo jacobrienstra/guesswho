@@ -16,7 +16,7 @@ interface GameSliceState {
   deck?: string;
   playerCard?: number;
   playerName?: string;
-  opponentName?: string;
+  opponentCode?: string;
   opponentCard?: number;
   oppCardError?: string;
   gameCards?: Card[];
@@ -36,11 +36,11 @@ export const gameSlice = createSlice({
     setPlayerName: (state, action: PayloadAction<string | undefined>): void => {
       state.playerName = action.payload;
     },
-    setOpponentName: (
+    setOpponentCode: (
       state,
       action: PayloadAction<string | undefined>
     ): void => {
-      state.opponentName = action.payload;
+      state.opponentCode = action.payload;
     },
     setOpponentCard: (state, action: PayloadAction<number>): void => {
       state.opponentCard = action.payload;
@@ -68,13 +68,12 @@ export const {
   setDeck,
   setPlayerCard,
   setPlayerName,
-  setOpponentName,
   unSetOpponentAndGameCards,
   setIsPlaying,
   setOppCardError,
 } = gameSlice.actions;
 
-const { setOpponentCard, setGameCards } = gameSlice.actions;
+const { setOpponentCard, setOpponentCode, setGameCards } = gameSlice.actions;
 
 export const setDeckAndCards = (deck: string) => (
   dispatch: Dispatch<any>
@@ -109,40 +108,50 @@ export const endGame = () => (dispatch: Dispatch<any>): void => {
   dispatch(setDeck(undefined));
   dispatch(setPlayerCard(undefined));
   dispatch(setPlayerName(undefined));
-  dispatch(setOpponentName(undefined));
   dispatch(unSetOpponentAndGameCards());
   dispatch(setOppCardError(undefined));
   dispatch(setIsPlaying(false));
 };
 
-export const setOpponentCardAndGameCardsFromHash = (hash: string) => (
+export const setOpponentCardAndGameCardsFromHash = (code: string) => (
   dispatch: Dispatch<any>,
   getState: () => RootState
 ): void => {
   const state = getState();
-  if (state.game.opponentName) {
-    const decoder = new Hashids(state.game.opponentName.toLowerCase());
-    const [id] = decoder.decode(hash) as number[];
-    const cardDict = selectCardEntities(state);
-    const opponentCardCard = cardDict[id];
-    if (!opponentCardCard) {
+  const [oppName, hash] = code.split("-");
+  if (!hash || !oppName) {
+    dispatch(
+      setOppCardError(
+        `Malformed opponent code. Should be: [Opponent's name]-[opponent's code]`
+      )
+    );
+    return;
+  }
+  dispatch(setOppCardError(undefined));
+  dispatch(setOpponentCode(code));
+  const decoder = new Hashids(oppName.toLowerCase());
+  const [id] = decoder.decode(hash) as number[];
+  const cardDict = selectCardEntities(state);
+  const opponentCardCard = cardDict[id];
+  if (!opponentCardCard) {
+    dispatch(
       setOppCardError(
         `Could not find opponent's card. Make sure you're spelling their name exactly as they entered it.`
-      );
-      return;
-    }
-    dispatch(setOppCardError(undefined));
-    dispatch(setOpponentCard(id));
-    const allWrongCardIds = selectCardIds(state).filter((i) => i !== id);
-    shuffle(allWrongCardIds);
-    const wrongGameCards = allWrongCardIds
-      .slice(0, state.settings.numCards - 1)
-      .map((cardId) => cardDict[cardId]) // Should throw error here lol
-      .filter(notEmpty);
-    const gameCards = [...wrongGameCards, opponentCardCard];
-    shuffle(gameCards);
-    dispatch(setGameCards(gameCards));
+      )
+    );
+    return;
   }
+  dispatch(setOppCardError(undefined));
+  dispatch(setOpponentCard(id));
+  const allWrongCardIds = selectCardIds(state).filter((i) => i !== id);
+  shuffle(allWrongCardIds);
+  const wrongGameCards = allWrongCardIds
+    .slice(0, state.settings.numCards - 1)
+    .map((cardId) => cardDict[cardId]) // Should throw error here lol
+    .filter(notEmpty);
+  const gameCards = [...wrongGameCards, opponentCardCard];
+  shuffle(gameCards);
+  dispatch(setGameCards(gameCards));
 };
 
 export default gameSlice.reducer;

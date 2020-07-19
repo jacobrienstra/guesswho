@@ -49,13 +49,18 @@ function Input(props: Props): JSX.Element {
   const [val, setVal] = React.useState(value);
 
   return (
-    <div css={root}>
+    <div css={root} className="input">
       <label htmlFor={name}>
         {label}
         <input
           name={name}
           type="text"
           value={val}
+          onKeyUp={(e: React.KeyboardEvent): void => {
+            if (e.keyCode === 13) {
+              onSubmit(val);
+            }
+          }}
           onChange={(e: ChangeEvent<HTMLInputElement>): void => {
             setVal(e.target.value);
           }}

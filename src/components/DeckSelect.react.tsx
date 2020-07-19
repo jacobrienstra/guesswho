@@ -1,12 +1,15 @@
 import { PortalWithState } from "react-portal";
 import React from "react";
+import { css } from "@emotion/core";
 
 import Setup from "./Setup.react";
 import Button from "./Button.react";
 
-// const input = css`
-//   display: none;
-// `;
+const root = css`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
 
 // const props = { webkitdirectory: "", directory: "" };
 
@@ -20,10 +23,10 @@ function DeckSelect(): JSX.Element {
   return (
     <PortalWithState closeOnEsc>
       {({ closePortal, openPortal, portal }): JSX.Element => (
-        <>
-          <Button onClick={openPortal}>Choose Existing Deck</Button>
+        <div css={root}>
+          <Button onClick={openPortal}>Start New Game</Button>
           {portal(<Setup onClose={closePortal} />)}
-        </>
+        </div>
       )}
     </PortalWithState>
   );

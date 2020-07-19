@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from "react-loading";
 import React from "react";
+import Hashids from "hashids";
 import { cx } from "emotion";
 import { css } from "@emotion/core";
 
@@ -19,6 +20,8 @@ import {
   setDeck,
   setPlayerCard,
   setPlayerName,
+  setOpponentCardAndGameCardsFromHash,
+  setIsPlaying,
 } from "src/redux/reducers/game";
 import { fetchDecks, selectAllCards } from "src/redux/reducers/api";
 
@@ -79,8 +82,8 @@ function Setup(props: Props): JSX.Element {
   const playerCard = useSelector((state: RootState) => state.game.playerCard);
   const deck = useSelector((state: RootState) => state.game.deck);
   const playerName = useSelector((state: RootState) => state.game.playerName);
-  const opponentName = useSelector(
-    (state: RootState) => state.game.opponentName
+  const opponentCode = useSelector(
+    (state: RootState) => state.game.opponentCode
   );
   const oppCardError = useSelector(
     (state: RootState) => state.game.oppCardError
@@ -88,6 +91,7 @@ function Setup(props: Props): JSX.Element {
   const opponentCard = useSelector(
     (state: RootState) => state.game.opponentCard
   );
+  const gameCards = useSelector((state: RootState) => state.game.gameCards);
 
   const toggleDeck = (value: string): void => {
     if (deck === value) {
@@ -135,6 +139,13 @@ function Setup(props: Props): JSX.Element {
       dispatch(fetchDecks());
     }
   }, [decksStatus, dispatch]);
+
+  let hash;
+
+  if (playerName != null && playerName !== "" && playerCard) {
+    const encoder = new Hashids(playerName);
+    hash = `${playerName.toLowerCase()}-${encoder.encode(playerCard)}`;
+  }
 
   return (
     <Modal
@@ -211,7 +222,7 @@ function Setup(props: Props): JSX.Element {
                       })}
                       selectedValue={playerCard}
                       toggle={toggleCard}
-                      element={(item) => (
+                      element={(item): JSX.Element => (
                         <CharacterCard
                           maxWidth={100}
                           card={{ ...item }}
@@ -225,15 +236,89 @@ function Setup(props: Props): JSX.Element {
               }
               case 2: {
                 return (
-                  <Input
-                    name="playerName"
-                    label="Your Name"
-                    value={playerName}
-                    isValid={playerName != null && playerName !== ""}
-                    onSubmit={(val): void => {
-                      dispatch(setPlayerName(val));
-                    }}
-                  />
+                  <div
+                    css={css`
+                      display: flex;
+                      flex-direction: column;
+                      user-select: all;
+                    `}
+                  >
+                    <Input
+                      name="playerName"
+                      label="Your Name"
+                      value={playerName}
+                      isValid={playerName != null && playerName !== ""}
+                      onSubmit={(val): void => {
+                        dispatch(setPlayerName(val));
+                      }}
+                    />
+                    <div
+                      css={css`
+                        margin-bottom: 1rem;
+                        color: var(--blue);
+                        font-weight: 700;
+                        font-size: 1.2rem;
+                        text-indent: 2rem;
+                        visibility: ${hash != null ? "visible" : "hidden"};
+                      `}
+                    >
+                      Your Code: {hash}
+                    </div>
+                    <Input
+                      name="opponentCode"
+                      label="Opponent's Code"
+                      value={opponentCode}
+                      isValid={
+                        opponentCode != null &&
+                        opponentCard != null &&
+                        oppCardError == null
+                      }
+                      onSubmit={(val): void => {
+                        if (val)
+                          dispatch(setOpponentCardAndGameCardsFromHash(val));
+                      }}
+                    />
+                    <div
+                      css={css`
+                        margin-bottom: 1rem;
+                        color: var(--blue);
+                        font-weight: 700;
+                        font-size: 1.2rem;
+                        text-indent: 2rem;
+                        visibility: ${oppCardError == null &&
+                        opponentCode != null
+                          ? "visible"
+                          : "hidden"};
+                      `}
+                    >
+                      Opponent Code: {opponentCode}
+                    </div>
+
+                    <div
+                      css={css`
+                        margin-bottom: 1rem;
+                        color: var(--red);
+                        font-weight: 700;
+                        font-size: 1.2rem;
+                        visibility: ${oppCardError != null
+                          ? "visible"
+                          : "hidden"};
+                      `}
+                    >
+                      Error: {oppCardError}
+                    </div>
+
+                    {opponentCard && oppCardError == null && gameCards ? (
+                      <Button
+                        onClick={(): void => {
+                          dispatch(setIsPlaying(true));
+                          props.onClose();
+                        }}
+                      >
+                        Start Game!
+                      </Button>
+                    ) : null}
+                  </div>
                 );
               }
               default: {
