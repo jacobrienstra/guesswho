@@ -8,8 +8,8 @@ import {
   faInfoCircle,
   faCog,
 } from "@fortawesome/free-solid-svg-icons";
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
 import { css } from "@emotion/core";
 
 import { nameCase } from "./util";

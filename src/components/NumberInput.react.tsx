@@ -1,8 +1,5 @@
-import React, { ChangeEvent } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import { css } from "@emotion/core";
-
-import Button from "./Button.react";
 
 type Props = {
   name: string;

@@ -60,7 +60,6 @@ function Settings(): JSX.Element {
                     name="numCards"
                     label="Number of Cards"
                     value={numCards}
-                    isValid
                     min={24}
                     max={48}
                     onSubmit={(val): void => {
