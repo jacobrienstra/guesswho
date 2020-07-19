@@ -4,16 +4,25 @@ import {
   faCheckSquare,
   faTimes,
   faTimesCircle,
+  faCheckCircle,
+  faInfoCircle,
+  faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { css } from "@emotion/core";
 
-import { selectAllCards } from "./redux/reducers/api";
-import Modal from "./components/Modal.react";
+import type { RootState } from "./redux/store";
 import DeckSelect from "./components/DeckSelect.react";
 import CardGrid from "./components/CardGrid.react";
 
-library.add(faCheckSquare, faTimes, faTimesCircle);
+library.add(
+  faCheckSquare,
+  faTimes,
+  faTimesCircle,
+  faCheckCircle,
+  faInfoCircle,
+  faCog
+);
 
 const root = css`
   display: block;
@@ -26,11 +35,12 @@ const root = css`
 `;
 
 function App(): JSX.Element {
+  const gameCards = useSelector((state: RootState) => state.game.gameCards);
   return (
     <>
       <div css={root}>
         <DeckSelect />
-        <CardGrid cards={useSelector(selectAllCards)} />
+        {gameCards ? <CardGrid cards={gameCards} /> : null}
       </div>
       <div id="portal-root" />
     </>

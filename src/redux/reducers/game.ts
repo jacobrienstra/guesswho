@@ -121,7 +121,7 @@ export const setOpponentCardAndGameCardsFromHash = (hash: string) => (
 ): void => {
   const state = getState();
   if (state.game.opponentName) {
-    const decoder = new Hashids(state.game.opponentName);
+    const decoder = new Hashids(state.game.opponentName.toLowerCase());
     const [id] = decoder.decode(hash) as number[];
     const cardDict = selectCardEntities(state);
     const opponentCardCard = cardDict[id];

@@ -7,9 +7,9 @@ import { css } from "@emotion/core";
 import { capitalize } from "../util";
 
 import Modal from "./Modal.react";
+import Input from "./Input.react";
 import FancySelect from "./FancySelect.react";
 import CharacterCard from "./CharacterCard.react";
-import CardGrid from "./CardGrid.react";
 import Button from "./Button.react";
 
 import { Status, Card } from "src/redux/types";
@@ -18,6 +18,7 @@ import {
   setDeckAndCards,
   setDeck,
   setPlayerCard,
+  setPlayerName,
 } from "src/redux/reducers/game";
 import { fetchDecks, selectAllCards } from "src/redux/reducers/api";
 
@@ -77,6 +78,13 @@ function Setup(props: Props): JSX.Element {
   const cards = useSelector((state: RootState) => selectAllCards(state));
   const playerCard = useSelector((state: RootState) => state.game.playerCard);
   const deck = useSelector((state: RootState) => state.game.deck);
+  const playerName = useSelector((state: RootState) => state.game.playerName);
+  const opponentName = useSelector(
+    (state: RootState) => state.game.opponentName
+  );
+  const oppCardError = useSelector(
+    (state: RootState) => state.game.oppCardError
+  );
   const opponentCard = useSelector(
     (state: RootState) => state.game.opponentCard
   );
@@ -214,6 +222,19 @@ function Setup(props: Props): JSX.Element {
                   );
                 }
                 break;
+              }
+              case 2: {
+                return (
+                  <Input
+                    name="playerName"
+                    label="Your Name"
+                    value={playerName}
+                    isValid={playerName != null && playerName !== ""}
+                    onSubmit={(val): void => {
+                      dispatch(setPlayerName(val));
+                    }}
+                  />
+                );
               }
               default: {
                 return null;

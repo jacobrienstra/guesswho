@@ -21,6 +21,10 @@ const button = css`
   outline: none;
   cursor: pointer;
 
+  &:not(.disabled):not(.hidden):active {
+    transform: scale(0.95);
+  }
+
   &.disabled {
     color: black;
     background: var(--disabled);

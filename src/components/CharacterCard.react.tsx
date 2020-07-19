@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import React from "react";
 import { cx } from "emotion";
-import debounce from "debounce";
 import { css, SerializedStyles } from "@emotion/core";
 
 import { Card } from "../redux/types";
@@ -13,10 +12,10 @@ const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
   box-sizing: border-box;
   max-width: ${maxWidth}px;
   margin: 16px;
+  border: 2px solid transparent;
   perspective: 40rem;
   cursor: pointer;
-  transition: z-index;
-  transition-delay: 0.2s;
+  transition: z-index 0 0.2s, border-color 0.2s;
 
   /* flip speed goes here */
   .flipper {
@@ -28,7 +27,7 @@ const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
     .front,
     .back {
       min-width: 100%;
-      border: 2px solid black;
+      border: 2px solid navy;
       border-radius: 6px;
       backface-visibility: hidden;
     }
@@ -64,6 +63,15 @@ const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
       .name {
         color: white;
         font-weight: 700;
+      }
+    }
+  }
+
+  &:hover {
+    .flipper {
+      .front,
+      .back {
+        border-color: var(--blue);
       }
     }
   }
