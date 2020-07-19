@@ -77,6 +77,7 @@ module.exports = {
       "error",
       { allow: ["arrowFunctions"] },
     ],
+    "@typescript-eslint/no-explicit-any": "off",
     "prettier/prettier": "error",
     "react/display-name": "off",
     "max-classes-per-file": "off",

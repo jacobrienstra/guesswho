@@ -2,7 +2,6 @@ export interface Card {
   name: string;
   srcUri: string;
   id: number;
-  hash: string;
 }
 
 export enum Status {

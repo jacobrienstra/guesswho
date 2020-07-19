@@ -103,6 +103,7 @@ export const {
   selectAll: selectAllCards,
   selectById: selectCardById,
   selectIds: selectCardIds,
+  selectEntities: selectCardEntities,
 } = cardsAdapter.getSelectors((state: RootState) => state.api.cards);
 
 export default apiSlice.reducer;
