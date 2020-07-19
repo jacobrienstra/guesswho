@@ -2,7 +2,7 @@
   "name": "guesswho",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jacobrienstra.github.io/guesswho",
+  "homepage": "https://jacobrienstra.github.io/guesswho/",
   "dependencies": {
     "@directus/sdk-js": "^6.2.0",
     "@emotion/core": "^10.0.28",
@@ -30,6 +30,7 @@
     "react-scripts": "3.4.1",
     "react-transition-group": "^4.4.1",
     "redux": "^4.0.5",
+    "serve": "^11.3.2",
     "sharp": "^0.25.4",
     "stylelint-order": "^4.1.0",
     "typescript": "^3.9.5",
@@ -71,8 +72,8 @@
     "eject": "react-app-rewired eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build"
   },
   "eslintConfig": {
     "extends": "react-app"

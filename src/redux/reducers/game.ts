@@ -7,8 +7,8 @@ import { fetchCards, removeCards } from "./api";
 
 interface GameSliceState {
   deck?: string;
-  playerCard?: Card;
-  opponentCard?: Card;
+  playerCard?: number;
+  opponentCard?: number;
 }
 
 export const gameSlice = createSlice({
@@ -18,11 +18,11 @@ export const gameSlice = createSlice({
     setDeck: (state, action: PayloadAction<string | undefined>): void => {
       state.deck = action.payload;
     },
-    setPlayerCard: (state, action: PayloadAction<Card>): void => {
-      state.playerCard = action.payload;
+    setPlayerCard: (state, action: PayloadAction<Card | undefined>): void => {
+      state.playerCard = action.payload?.id;
     },
     setOpponentCard: (state, action: PayloadAction<Card>): void => {
-      state.opponentCard = action.payload;
+      state.opponentCard = action.payload.id;
     },
   },
 });

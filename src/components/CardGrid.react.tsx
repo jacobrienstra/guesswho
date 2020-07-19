@@ -1,3 +1,4 @@
+import { Flipper } from "react-flip-toolkit";
 import React from "react";
 import { css } from "@emotion/core";
 
@@ -17,18 +18,28 @@ const grid = css`
 interface OwnProps {
   cards: Card[];
   height?: number;
+  onCardClick?: (card: Card) => void;
 }
 
 export default function CardGrid(props: OwnProps): JSX.Element {
-  const { cards } = props;
+  const { cards, height, onCardClick } = props;
 
   return (
-    <div css={grid}>
+    <Flipper
+      flipKey={cards}
+      css={grid}
+      spring={{ damping: 21, stiffness: 150 }}
+    >
       {cards.map(
         (card: Card): JSX.Element => (
-          <CharacterCard key={card.id} card={card} height={props.height} />
+          <CharacterCard
+            key={card.id}
+            card={card}
+            height={height}
+            onClick={onCardClick ? (): void => onCardClick(card) : undefined}
+          />
         )
       )}
-    </div>
+    </Flipper>
   );
 }

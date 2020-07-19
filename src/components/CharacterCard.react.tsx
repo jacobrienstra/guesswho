@@ -7,7 +7,7 @@ import { Card } from "../redux/types";
 
 import { RootState } from "src/redux/store";
 
-const card = (height: number): SerializedStyles => css`
+const cardStyle = (height: number): SerializedStyles => css`
   position: relative;
   display: block;
   flex: 0 1 auto;
@@ -86,21 +86,25 @@ interface Props {
   card: Card;
   height?: number;
   onClick?: () => void;
+  className?: string;
 }
 
 function CharacterCard(props: Props): JSX.Element {
-  const { srcUri, name, id } = props.card;
-  const { height = 260 } = props;
+  const { height = 260, card, onClick, className, ...rest } = props;
+  const { srcUri, name, id } = card;
   const [isVisible, setVisible] = React.useState(true);
   const showName = useSelector((state: RootState) => state.settings.showName);
   return (
     <div
-      css={card(height)}
+      css={cardStyle(height)}
       key={id}
-      className={cx({ eliminated: !isVisible }, ["card", "flip-container"])}
-      onClick={
-        props.onClick ? props.onClick : (): void => setVisible(!isVisible)
-      }
+      className={cx({ eliminated: !isVisible }, [
+        "card",
+        "flip-container",
+        className,
+      ])}
+      onClick={onClick || ((): void => setVisible(!isVisible))}
+      {...rest}
     >
       <div className="flipper">
         <div className="front">

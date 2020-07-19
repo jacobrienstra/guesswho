@@ -8,12 +8,17 @@ import { capitalize } from "../util";
 
 import Modal from "./Modal.react";
 import FancySelect from "./FancySelect.react";
+import CharacterCard from "./CharacterCard.react";
 import CardGrid from "./CardGrid.react";
 import Button from "./Button.react";
 
-import { Status } from "src/redux/types";
+import { Status, Card } from "src/redux/types";
 import { RootState } from "src/redux/store";
-import { setDeckAndCards, setDeck } from "src/redux/reducers/game";
+import {
+  setDeckAndCards,
+  setDeck,
+  setPlayerCard,
+} from "src/redux/reducers/game";
 import { fetchDecks, selectAllCards } from "src/redux/reducers/api";
 
 const loading = css`
@@ -70,7 +75,24 @@ function Setup(props: Props): JSX.Element {
   const decksStatus = useSelector((state: RootState) => state.api.decks.status);
   const cardsStatus = useSelector((state: RootState) => state.api.cards.status);
   const cards = useSelector((state: RootState) => selectAllCards(state));
+  const playerCard = useSelector((state: RootState) => state.game.playerCard);
   const deck = useSelector((state: RootState) => state.game.deck);
+
+  const toggleDeck = (value: string): void => {
+    if (deck === value) {
+      dispatch(setDeck(undefined));
+    } else {
+      dispatch(setDeckAndCards(value));
+    }
+  };
+
+  const toggleCard = (card: Card): void => {
+    if (playerCard === card.id) {
+      dispatch(setPlayerCard(undefined));
+    } else {
+      dispatch(setPlayerCard(card));
+    }
+  };
 
   const steps = ["Choose Deck", "Choose Card"];
   const atLastStep = step === steps.length - 1;
@@ -142,13 +164,9 @@ function Setup(props: Props): JSX.Element {
                           text: capitalize(d),
                         };
                       })}
-                      value={deck}
+                      selectedValue={deck}
                       toggle={(item): void => {
-                        if (deck === item.value) {
-                          dispatch(setDeck(undefined));
-                        } else {
-                          dispatch(setDeckAndCards(item.value));
-                        }
+                        toggleDeck(item.value);
                       }}
                     />
                   );
@@ -156,7 +174,7 @@ function Setup(props: Props): JSX.Element {
                 break;
               }
               case 1: {
-                if (cardsStatus === Status.isPending) {
+                if (cardsStatus === Status.isPending && cards) {
                   return (
                     <div css={loading}>
                       <ReactLoading type="spin" color="var(--blue)" />
@@ -164,7 +182,22 @@ function Setup(props: Props): JSX.Element {
                   );
                 }
                 if (cardsStatus === Status.hasSucceeded && cards) {
-                  return <CardGrid cards={cards} height={100} />;
+                  return (
+                    <FancySelect
+                      items={cards.map((card) => {
+                        return { ...card, value: card.id, text: card.name };
+                      })}
+                      selectedValue={playerCard}
+                      toggle={toggleCard}
+                      element={(item) => (
+                        <CharacterCard
+                          height={100}
+                          card={{ ...item }}
+                          {...item}
+                        />
+                      )}
+                    />
+                  );
                 }
                 break;
               }

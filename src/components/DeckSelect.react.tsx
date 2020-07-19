@@ -18,7 +18,7 @@ import Button from "./Button.react";
 
 function DeckSelect(): JSX.Element {
   return (
-    <PortalWithState closeOnOutsideClick closeOnEsc>
+    <PortalWithState closeOnEsc>
       {({ closePortal, openPortal, portal }): JSX.Element => (
         <>
           <Button onClick={openPortal}>Choose Existing Deck</Button>
