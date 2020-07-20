@@ -7,6 +7,20 @@ import { Card } from "../redux/types";
 
 import { RootState } from "src/redux/store";
 
+function useStickyState(
+  defaultValue: any,
+  key: string
+): [any, React.Dispatch<any>] {
+  const [value, setValue] = React.useState(() => {
+    const stickyValue = window.localStorage.getItem(key);
+    return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
+  });
+  React.useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+  return [value, setValue];
+}
+
 const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
   z-index: 0;
   box-sizing: border-box;
@@ -87,15 +101,24 @@ const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
 type Props = {
   card: Card;
   maxWidth?: number;
+  canFlip?: boolean;
   onClick?: () => void;
   className?: string;
   style?: React.CSSProperties;
 };
 
 function CharacterCard(props: Props): JSX.Element {
-  const { maxWidth, card, onClick, className, style, ...rest } = props;
+  const {
+    maxWidth,
+    card,
+    onClick,
+    className,
+    style,
+    canFlip = true,
+    ...rest
+  } = props;
   const { srcUri, name, id } = card;
-  const [isVisible, setVisible] = React.useState(true);
+  const [isVisible, setVisible] = useStickyState(true, id.toString());
   const showName = useSelector((state: RootState) => state.settings.showName);
 
   const handleMouseEnter = (
@@ -111,12 +134,14 @@ function CharacterCard(props: Props): JSX.Element {
     <div
       css={cardStyle(maxWidth)}
       key={id}
-      className={cx({ eliminated: !isVisible }, [
+      className={cx({ eliminated: canFlip && !isVisible }, [
         "card",
         "flip-container",
         className,
       ])}
-      onClick={onClick || ((): void => setVisible(!isVisible))}
+      onClick={
+        onClick || canFlip ? (): void => setVisible(!isVisible) : (): void => {}
+      }
       onMouseEnter={handleMouseEnter}
       onFocus={(): void => {}}
       style={style}

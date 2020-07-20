@@ -146,7 +146,7 @@ function App(): JSX.Element {
                   <CharacterCard
                     maxWidth={300}
                     card={playerCard}
-                    onClick={(): void => {}}
+                    canFlip={false}
                   />
                 </>
               ) : null}
