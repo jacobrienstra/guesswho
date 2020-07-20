@@ -24,7 +24,7 @@ function DeckSelect(): JSX.Element {
     <PortalWithState closeOnEsc>
       {({ closePortal, openPortal, portal }): JSX.Element => (
         <div css={root}>
-          <Button onClick={openPortal}>Start New Game</Button>
+          <Button onClick={openPortal}>Game Setup</Button>
           {portal(<Setup onClose={closePortal} />)}
         </div>
       )}

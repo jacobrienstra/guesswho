@@ -153,11 +153,8 @@ function App(): JSX.Element {
             </div>
           </div>
         </div>
-        {!isPlaying ? (
-          <DeckSelect />
-        ) : gameCards ? (
-          <CardGrid cards={gameCards} />
-        ) : null}
+        <DeckSelect />
+        {gameCards && isPlaying ? <CardGrid cards={gameCards} /> : null}
       </div>
       <div id="portal-root" />
     </>
