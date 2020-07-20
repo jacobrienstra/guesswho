@@ -39,6 +39,7 @@ export default function CardGrid(props: Props): JSX.Element {
       <CharacterCard
         key={card.id}
         card={card}
+        style={{ marginBottom: "8px" }}
         maxWidth={maxWidth}
         onClick={onCardClick ? (): void => onCardClick(card) : undefined}
       />
