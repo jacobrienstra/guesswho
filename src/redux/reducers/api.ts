@@ -77,6 +77,7 @@ const apiSlice = createSlice({
     });
     builder.addCase(fetchCards.fulfilled, (state, action) => {
       state.cards.status = Status.hasSucceeded;
+      cardsAdapter.removeAll(state.cards);
       cardsAdapter.upsertMany(state.cards, action.payload);
     });
     builder.addCase(fetchCards.rejected, (state, action) => {
