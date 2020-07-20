@@ -44,7 +44,6 @@ const root = css`
   flex-wrap: wrap;
 
   & .select-option {
-    transition: all;
     &.selected {
       position: relative;
       z-index: 3;

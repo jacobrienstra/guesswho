@@ -11,7 +11,7 @@ const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
   z-index: 0;
   box-sizing: border-box;
   max-width: ${maxWidth}px;
-  margin: 16px;
+  margin: 0;
   border: 2px solid transparent;
   perspective: 40rem;
   cursor: pointer;

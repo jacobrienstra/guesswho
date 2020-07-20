@@ -146,7 +146,6 @@ function App(): JSX.Element {
                   <CharacterCard
                     maxWidth={300}
                     card={playerCard}
-                    style={{ margin: 0 }}
                     onClick={(): void => {}}
                   />
                 </>

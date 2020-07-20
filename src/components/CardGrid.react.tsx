@@ -11,7 +11,8 @@ const grid = css`
   flex-direction: row;
   flex-wrap: wrap;
   grid-auto-rows: min-content;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   align-content: flex-start;
   justify-content: center;
   width: 100%;

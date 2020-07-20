@@ -53,6 +53,7 @@ export const gameSlice = createSlice({
       state.oppCardError = action.payload;
     },
     unSetOpponentAndGameCards: (state): void => {
+      state.opponentCode = undefined;
       state.opponentCard = undefined;
       state.gameCards = undefined;
     },
