@@ -34,7 +34,8 @@ export const gameSlice = createSlice({
       state.playerCard = action.payload?.id;
     },
     setPlayerName: (state, action: PayloadAction<string | undefined>): void => {
-      state.playerName = action.payload;
+      const value = action.payload?.replace("-", "_");
+      state.playerName = value;
     },
     setOpponentCode: (
       state,
