@@ -72,7 +72,10 @@ const header = css`
     .buttonHolder {
       display: flex;
       flex: 1 1 25%;
-      align-items: flex-start;
+      align-items: center;
+      .settings {
+        margin-right: 1rem;
+      }
     }
     .title {
       flex: 1 1 50%;

@@ -10,7 +10,7 @@ const grid = css`
   display: grid;
   flex-direction: row;
   flex-wrap: wrap;
-  grid-auto-rows: 1fr;
+  grid-auto-rows: min-content;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   align-content: flex-start;
   justify-content: center;

@@ -240,7 +240,7 @@ function Setup(props: Props): JSX.Element {
                     css={css`
                       display: flex;
                       flex-direction: column;
-                      user-select: all;
+                      user-select: text;
                     `}
                   >
                     <Input

@@ -12,9 +12,10 @@ import type { RootState } from "src/redux/store";
 import { setNumCards, setShowName } from "src/redux/reducers/settings";
 
 const root = css`
+  border-radius: 4px;
   svg {
+    margin: 8px 0;
     padding: 4px;
-    border-radius: 4px;
     cursor: pointer;
     &:hover {
       color: white;
@@ -51,7 +52,12 @@ function Settings(): JSX.Element {
     <PortalWithState closeOnEsc>
       {({ closePortal, openPortal, portal }): JSX.Element => (
         <div css={root}>
-          <FontAwesomeIcon size="2x" icon="cog" onClick={openPortal} />
+          <FontAwesomeIcon
+            size="2x"
+            icon="cog"
+            onClick={openPortal}
+            className="settings"
+          />
           {portal(
             <Modal title="Settings" onClose={closePortal}>
               <div className="content" css={modalContent}>
