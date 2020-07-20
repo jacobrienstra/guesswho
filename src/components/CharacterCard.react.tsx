@@ -140,7 +140,8 @@ function CharacterCard(props: Props): JSX.Element {
         className,
       ])}
       onClick={
-        onClick || canFlip ? (): void => setVisible(!isVisible) : (): void => {}
+        onClick ||
+        (canFlip ? (): void => setVisible(!isVisible) : (): void => {})
       }
       onMouseEnter={handleMouseEnter}
       onFocus={(): void => {}}

@@ -225,9 +225,7 @@ function Setup(props: Props): JSX.Element {
                       element={(item): JSX.Element => (
                         <CharacterCard
                           maxWidth={100}
-                          css={css`
-                            margin: 8px;
-                          `}
+                          canFlip={false}
                           card={{ ...item }}
                           {...item}
                         />
