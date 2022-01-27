@@ -10,18 +10,18 @@ const grid = css`
   /* display: grid;
   flex-direction: row;
   flex-wrap: wrap;
-  grid-auto-rows: min-content;
+  grid-auto-rows: 200px;
   grid-gap: 8px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   align-content: flex-start;
   justify-content: center;
   width: 100%; */
   display: flex;
-  width: auto;
-  margin-left: -30px; /* gutter size offset */
+  margin-left: -16px;
 
   .card-grid-column {
-    padding-left: 30px; /* gutter size */
+    width: 100%;
+    padding-left: 16px; /* gutter size */
     background-clip: padding-box;
   }
 `;
@@ -39,6 +39,7 @@ export default function CardGrid(props: Props): JSX.Element {
       <CharacterCard
         key={card.id}
         card={card}
+        className="card"
         style={{ marginBottom: "8px" }}
         maxWidth={maxWidth}
         onClick={onCardClick ? (): void => onCardClick(card) : undefined}
@@ -46,13 +47,13 @@ export default function CardGrid(props: Props): JSX.Element {
     )
   );
   return (
-    <Masonry
-      css={grid}
-      className="card-grid"
-      columnClassName="card-grid-column"
-      breakpointCols={3}
-    >
-      {cardElements}
-    </Masonry>
+    // <Masonry
+    //   css={grid}
+    //   className="card-grid"
+    //   columnClassName="card-grid-column"
+    //   breakpointCols={4}
+    // >
+    <div css={grid}>{cardElements}</div>
+    // </Masonry>
   );
 }

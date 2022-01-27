@@ -24,7 +24,7 @@ function useStickyState(
 const cardStyle = (maxWidth: number | undefined): SerializedStyles => css`
   z-index: 0;
   box-sizing: border-box;
-  max-width: ${maxWidth}px;
+  max-width: ${maxWidth ? `${maxWidth}px` : "none"};
   margin: 0;
   border: 2px solid transparent;
   perspective: 40rem;
